@@ -77,7 +77,6 @@ def equally_divide(n, total):
     else:
         dist = [total / n + 1] * (total % n) + [total / n] * (n - total % n)
         return [int(i) for i in dist]
-    
 #TODO: Add distribution of red/black balls in network toggle
 def create_network(node_count, edges, total_red, total_black, dist = 'random'):
     
