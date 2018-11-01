@@ -1,6 +1,7 @@
 import networkx as nx
 import random
 import math
+import time
 import matplotlib.pyplot as plt
 from networkx.drawing.nx_agraph import graphviz_layout
 from numpy.random import choice
@@ -8,27 +9,30 @@ from numpy.random import choice
 
 
 def main():
-    node_count = 10
+    node_count = 20
     edges = 2
-    initial_red = 50
-    initial_black = 50
-    dist = 'random'
-    added_red = 1
+    initial_red = 100
+    initial_black = 100
+    dist = 'equal'
+    added_red = 3
     added_black = 1
     
-    G = create_network(node_count, edges, initial_red, initial_black, dist = 'random')
-    print("Initial network distribution:")
-    for node in G.node.items():
-            print(node[0], "red:", node[1]['urns']['red'], "black", node[1]['urns']['black'])
-    print("\n")
-    for i in range(0,3):
+    G = create_network(node_count, edges, initial_red, initial_black, dist)
+    #print("Initial network distribution:")
+    #for node in G.node.items():
+            #print(node[0], "red:", node[1]['urns']['red'], "black", node[1]['urns']['black'])
+    #print("\n")
+
+
+    for i in range(0,30):
         run_time_step(G, i)
         add_balls_to_nodes(G, added_red, added_black)
-        for node in G.node.items():
-            print(node[0], "red:", node[1]['urns']['red'], "black", node[1]['urns']['black'])
-        print("\n")
-    nx.draw(G)
-    plt.show()
+        color_map = set_color(G)
+        #for node in G.node.items():
+            #print(node[0], "red:", node[1]['urns']['red'], "black", node[1]['urns']['black'])
+        #print("\n")
+        nx.draw(G, node_color = color_map)
+        plt.show()
     # adj_dict = nx.to_dict_of_dicts(G)
 
 def run_time_step(G, cur_time = 0):
@@ -37,7 +41,7 @@ def run_time_step(G, cur_time = 0):
     for node in G.node.items():
             draw = draw_from_superurn(G, node)
             current_conditions[node[0]] = draw
-    print("At time step", cur_time + 1, "the current condition is:", current_conditions, "\n")
+    #print("At time step", cur_time + 1, "the current condition is:", current_conditions, "\n")
     
     
 def draw_from_superurn(G, node):
@@ -77,7 +81,15 @@ def equally_divide(n, total):
     else:
         dist = [total / n + 1] * (total % n) + [total / n] * (n - total % n)
         return [int(i) for i in dist]
-    
+
+def set_color(G):
+    color_map = []
+    for node in G.node.items():
+        if node[1]['prev_draw'] == 1:
+            color_map.append('red')
+        else:
+            color_map.append('black')
+    return color_map
 #TODO: Add distribution of red/black balls in network toggle
 def create_network(node_count, edges, total_red, total_black, dist = 'random'):
     
