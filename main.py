@@ -5,10 +5,13 @@ import time
 import matplotlib.pyplot as plt
 from networkx.drawing.nx_agraph import graphviz_layout
 from numpy.random import choice
+import pylab
+from matplotlib.pyplot import pause
 
 
 
 def main():
+    pylab.ion()
     node_count = 20
     edges = 2
     initial_red = 100
@@ -18,23 +21,32 @@ def main():
     added_black = 1
     
     G = create_network(node_count, edges, initial_red, initial_black, dist)
+    set_positions(G)
     #print("Initial network distribution:")
     #for node in G.node.items():
             #print(node[0], "red:", node[1]['urns']['red'], "black", node[1]['urns']['black'])
     #print("\n")
 
-
+    pylab.show()
+    
     for i in range(0,30):
-        run_time_step(G, i)
-        add_balls_to_nodes(G, added_red, added_black)
-        color_map = set_color(G)
-        #for node in G.node.items():
-            #print(node[0], "red:", node[1]['urns']['red'], "black", node[1]['urns']['black'])
-        #print("\n")
-        nx.draw(G, node_color = color_map)
-        plt.show()
-    # adj_dict = nx.to_dict_of_dicts(G)
+        pylab.clf()
+        update_fig(G, added_red, added_black)
+        pylab.draw()
+        pause(1)
+        
 
+def update_fig(G, added_red, added_black):
+    run_time_step(G)
+    add_balls_to_nodes(G, added_red, added_black)
+    color_map = set_color(G)
+    nx.draw(G, nx.get_node_attributes(G,'pos'), node_color = color_map)
+
+def set_positions(G):
+    pos = nx.random_layout(G)
+    for n, p in pos.items():
+        G.node[n]['pos'] = p
+        
 def run_time_step(G, cur_time = 0):
     # Construct super urns
     current_conditions = {0 : 0}
