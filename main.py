@@ -33,12 +33,13 @@ def main():
         pylab.clf()
         update_fig(G, added_red, added_black)
         pylab.draw()
-        pause(1)
+        pause(0.3)
         
 
 def update_fig(G, added_red, added_black):
     run_time_step(G)
-    add_balls_to_nodes(G, added_red, added_black)
+    for node in G.node.items():
+        add_balls_to_node(G, node[0], added_red, added_black)
     color_map = set_color(G)
     nx.draw(G, nx.get_node_attributes(G,'pos'), node_color = color_map)
 
@@ -66,12 +67,11 @@ def draw_from_superurn(G, node):
     
     return node[1]['prev_draw']
         
-def add_balls_to_nodes(G, added_red, added_black):
-    for node in G.node.items():
-        if(node[1]['prev_draw'] == 1):
-            node[1]['urns']['red'] += added_red
-        elif(node[1]['prev_draw'] == 0):
-            node[1]['urns']['black'] += added_black
+def add_balls_to_node(G, node_index, added_red, added_black):
+    if(G.node[node_index]['prev_draw'] == 1):
+        G.node[node_index]['urns']['red'] += added_red
+    elif(G.node[node_index]['prev_draw'] == 0):
+        G.node[node_index]['urns']['black'] += added_black
     
 
 def find_condition(super_urn):
@@ -102,6 +102,7 @@ def set_color(G):
         else:
             color_map.append('black')
     return color_map
+
 #TODO: Add distribution of red/black balls in network toggle
 def create_network(node_count, edges, total_red, total_black, dist = 'random'):
     
