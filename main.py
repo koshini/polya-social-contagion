@@ -13,7 +13,6 @@ average_network_exposure_list = []
 
 
 def main():
-    # pylab.ion()
     iterations = 100
     edges = 2
     initial_red = 100
@@ -29,16 +28,19 @@ def main():
     # print(node[0], "red:", node[1]['urns']['red'], "black", node[1]['urns']['black'])
     # print("\n")
 
-    # pylab.show()
+    pylab.ion()
+    pylab.show()
 
     for i in range(0, iterations):
         run_time_step(G, added_red, added_black)
-        # pylab.clf()
-        # update_fig(G)
-        # pylab.draw()
-        # pause(0.3)
+        pylab.clf()
+        update_fig(G)
+        pylab.draw()
+        pause(0.3)
+        pylab.ioff()
 
     # Plot average network infection over time
+    plt.figure(2)
     plt.plot(list(range(iterations)), average_network_exposure_list, color='green', marker='o', markersize=3)
     plt.ylabel('average network exposure')
     plt.xlabel('time')
