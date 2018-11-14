@@ -24,6 +24,10 @@ def main():
     iterations = 50
     delta_r = 3
     delta_b = 1
+    budget = delta_r * NODE_COUNT
+    # set up initial budget distribution
+    y = [0]*NODE_COUNT
+    y[1] = budget
 
     G = network.create_network()
     set_positions(G)
@@ -37,7 +41,9 @@ def main():
 
 
     for i in range(0, iterations):
+
         # delta_b = gradient_descent(G)
+
         run_time_step(G, delta_r, delta_b)
         update_fig(G)
         pylab.ioff()
@@ -51,10 +57,49 @@ def main():
 
 
 # TODO: use gradient descent algorithm to determine delta_b
-def gradient_descent(G):
+def gradient_descent(G, delta_r, delta_b, budget, y):
     pass
-    # implement the algorithm here
-    # return delta_b
+    #perform all derivatives for each node
+
+    for r in range(0,NODE_COUNT):
+        # expected network exposure at time n-1, proportion of red balls in node i's superurn after n-1 draws
+        S[i][n - 1] = (U[i][n] * X[j][n]) / X[j][n]
+        Constant = (G.node['super_urn']['red'] + delta_r*S[i][n-1] + delta_r)/((G.node['super_urn']['red'] + delta_r*S[i][n-1] + delta_r) + delta_b + delta_b(1-))
+
+
+        X[j][n] = (G.node['super_urn']['red'] + G.node['super_urn']['black']) + delta_r+(1-)*delta_b
+        partial_deriv[r] = (1/NODE_COUNT)*Constant*(1/(1-(G.node['urns']['red'] + delta_r)/((G.node['urns']['red']+G.node['urns']['black'])+ delta_r + (1-)*delta_b)*X/X
+
+    
+    i = numpy.min(partial_deriv)
+    #move only in that direction
+
+    y_bar =[0] * NODE_COUNT
+    y_bar[i] = budget
+    gamma = 0.5
+
+
+    #define the function to determine step size
+
+
+    #porportion of red balls in node i's urn after n'th draw
+    U[i][n] = (G.node['urns']['red'] + delta_r)/(G.node['urns']['red']+G.node['urns']['black'])+ delta_r + (1-)*delta_b
+
+
+    for i in range(0,NODE_COUNT)
+        C[i] = G.node['urns']['red'] + delta_r*S[i][n-1] + delta_r
+        D[i] = C[i] + G.node['urns']['black'] + delta_b*(1-)
+        sigma[i] = (y-gamma(y_bar-y))*(1-S[i][n-1])
+        Fn[i] = (1/NODE_COUNT)*C[i]/(D[i] + sigma[i])
+
+    alpha_k = numpy.min(Fn)
+    y[i+1] = y[i]+ alpha_k(y_bar[i] + y[i])
+
+    delta_b = y[i+1]
+
+    return delta_b
+
+
 
 
 def run_time_step(G, delta_r, delta_b, cur_time=0):
