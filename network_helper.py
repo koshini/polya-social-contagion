@@ -9,6 +9,9 @@ class NetWorkHelper():
         self.dist = initial_condition['dist']
         self.red = initial_condition['red']
         self.black = initial_condition['black']
+        self.red_budget = initial_condition['red_budget']
+        self.black_budget = initial_condition['black_budget']
+        self.type = initial_condition['type']
         self.G = self.create_network()
 
 
@@ -16,10 +19,13 @@ class NetWorkHelper():
     def create_network(self):
         # Generate a barabasi albert graph with node_count nodes
         # Setting the second parameter to 1 means each node added will only have one edge to begin
-        G = nx.barabasi_albert_graph(self.node_count, self.edges)
-
+        if self.type == 'barabasi':
+            G = nx.barabasi_albert_graph(self.node_count, self.edges)
+        elif self.type == 'path':
+            G = nx.path_graph(self.node_count)
         # Initializes urn dictionary
-        urns = {0: {'red': 1, 'black': 1}}
+        urns = {}
+        prev_exposure = []
 
         # Set initial condition of urn
         # TODO: Add more distribtutions
@@ -35,10 +41,21 @@ class NetWorkHelper():
         # Add distributions to urn
         for i in range(0, self.node_count):
             urns[i] = {'red': red_dist[i], 'black': black_dist[i]}
-
+            
         # Adds unique urn to each node in network
         nx.set_node_attributes(G, name="urns", values=urns)
         nx.set_node_attributes(G, name="prev_draw", values=-1)
+        nx.set_node_attributes(G, name="prev_exposure", values=prev_exposure)
+        nx.set_node_attributes(G, name="prev_deltar", values=0)
+        nx.set_node_attributes(G, name="prev_deltab", values=0)
+        
+        #Set the intitial budget distributions
+        G.node[0]['prev_deltar'] = self.red_budget
+        G.node[0]['prev_deltab'] = self.black_budget
+        
+        #Set initial exposure rate
+        self.set_prev_exposure(G)
+        
         return G
 
 
@@ -56,3 +73,19 @@ class NetWorkHelper():
         Each such list is equally likely to occur."""
         dividers = sorted(random.sample(range(1, total), self.node_count - 1))
         return [a - b for a, b in zip(dividers + [total], [0] + dividers)]
+
+    def set_prev_exposure(self, G):
+        
+        for node in G.node.items():
+            total_red = 0
+            total_balls = 0
+            
+            total_red += node[1]['urns']['red']
+            total_balls += node[1]['urns']['red'] + node[1]['urns']['black']
+            
+            neighbors = nx.all_neighbors(G, node[0])
+            for neighbor_node in neighbors:
+                total_red += G.node[neighbor_node]['urns']['red']
+                total_balls += G.node[neighbor_node]['urns']['red'] + G.node[neighbor_node]['urns']['black']
+            
+            node[1]['prev_exposure'] = total_red/total_balls

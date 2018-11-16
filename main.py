@@ -9,17 +9,21 @@ import pylab
 from matplotlib.pyplot import pause
 from network_helper import NetWorkHelper
 
-NODE_COUNT = 10
+NODE_COUNT = 4
 AVG_NETWORK_INFECTION = []
 
 def main():
     network_initial_condition = {
         'node_count': NODE_COUNT,
-        'edges': 2,
-        'red': 100,
-        'black': 100,
-        'dist': 'equal'
+        'edges': 1,
+        'red': 50,
+        'black': 50,
+        'red_budget': 10,
+        'black_budget': 10,
+        'dist': 'equal',
+        'type': 'path'
     }
+    
     network = NetWorkHelper(network_initial_condition)
     iterations = 50
     delta_r = 3
@@ -59,60 +63,41 @@ def main():
 # TODO: use gradient descent algorithm to determine delta_b
 def gradient_descent(G, delta_r, delta_b, budget, y):
     pass
-    #perform all derivatives for each node
-
-    for r in range(0,NODE_COUNT):
-        # expected network exposure at time n-1, proportion of red balls in node i's superurn after n-1 draws
-        S[i][n - 1] = (U[i][n] * X[j][n]) / X[j][n]
-        Constant = (G.node['super_urn']['red'] + delta_r*S[i][n-1] + delta_r)/((G.node['super_urn']['red'] + delta_r*S[i][n-1] + delta_r) + delta_b + delta_b(1-))
-
-
-        X[j][n] = (G.node['super_urn']['red'] + G.node['super_urn']['black']) + delta_r+(1-)*delta_b
-        partial_deriv[r] = (1/NODE_COUNT)*Constant*(1/(1-(G.node['urns']['red'] + delta_r)/((G.node['urns']['red']+G.node['urns']['black'])+ delta_r + (1-)*delta_b)*X/X
-
+    exposure_rate = {}
     
-    i = numpy.min(partial_deriv)
-    #move only in that direction
-
-    y_bar =[0] * NODE_COUNT
-    y_bar[i] = budget
-    gamma = 0.5
-
-
-    #define the function to determine step size
-
-
-    #porportion of red balls in node i's urn after n'th draw
-    U[i][n] = (G.node['urns']['red'] + delta_r)/(G.node['urns']['red']+G.node['urns']['black'])+ delta_r + (1-)*delta_b
-
-
-    for i in range(0,NODE_COUNT)
-        C[i] = G.node['urns']['red'] + delta_r*S[i][n-1] + delta_r
-        D[i] = C[i] + G.node['urns']['black'] + delta_b*(1-)
-        sigma[i] = (y-gamma(y_bar-y))*(1-S[i][n-1])
-        Fn[i] = (1/NODE_COUNT)*C[i]/(D[i] + sigma[i])
-
-    alpha_k = numpy.min(Fn)
-    y[i+1] = y[i]+ alpha_k(y_bar[i] + y[i])
-
-    delta_b = y[i+1]
-
-    return delta_b
+    for node in G.node.items():
+        current_red = 0
+        current_black = 0
+        expected_red = 0
+        expected_black = 0
+        
+        current_red += node[1]['urns']['red'] 
+        current_black += node[1]['urns']['black']
+        expected_red += delta_r*node[1]['prev_exposure']
+        
+        neighbors = nx.all_neighbors(G, node[0])
+        for neighbor_node in neighbors:
+            current_red += G.node[neighbor_node]['urns']['red'] 
+            current_black += G.node[neighbor_node]['urns']['black']
+            expected_red += delta_r*G.node[neighbor_node]['prev_exposure']
+        
+        #TODO: we have all the constants of the equations now, but
+        #      from this point we have to do the sum of the partials for each node
+        #      and store it.
 
 
 
 
 def run_time_step(G, delta_r, delta_b, cur_time=0):
-    current_conditions = {0: 0}
+    current_conditions = {}
     network_infection_sum = 0
     for node in G.node.items():
-        add_balls_to_node(G, node[0], delta_r, delta_b)
         draw = draw_from_superurn(G, node)
         current_conditions[node[0]] = draw
+        add_balls_to_node(G, node[0], delta_r, delta_b)
         network_infection_sum += node[1]['super_urn']['network_infection']
 
-    average_network_infection = network_infection_sum / NODE_COUNT
-    AVG_NETWORK_INFECTION.append(average_network_infection)
+    AVG_NETWORK_INFECTION.append(network_infection_sum / NODE_COUNT)
 
 
 def draw_from_superurn(G, node):
