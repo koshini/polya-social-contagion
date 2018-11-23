@@ -9,21 +9,29 @@ import pylab
 from matplotlib.pyplot import pause
 from network_helper import NetWorkHelper
 
-NODE_COUNT = 10
+NODE_COUNT = 15
 AVG_NETWORK_INFECTION = []
 
 def main():
     network_initial_condition = {
         'node_count': NODE_COUNT,
         'edges': 2,
-        'red': 100,
-        'black': 100,
-        'dist': 'equal'
+        'red': 500,
+        'black': 500,
+        'red_budget': 50,
+        'black_budget': 50,
+        'dist': 'equal',
+        'type': 'barabasi'
     }
+    
     network = NetWorkHelper(network_initial_condition)
-    iterations = 50
-    delta_r = 3
+    iterations = 100
+    delta_r = 1
     delta_b = 1
+    budget = delta_r * NODE_COUNT
+    # set up initial budget distribution
+    y = [0]*NODE_COUNT
+    y[1] = budget
 
     G = network.create_network()
     set_positions(G)
@@ -34,11 +42,14 @@ def main():
     # for node in G.node.items():
     # print(node[0], "red:", node[1]['urns']['red'], "black", node[1]['urns']['black'])
     # print("\n")
-
-
+    for node in G.node.items():
+        network.construct_super_urn(node)
+    
     for i in range(0, iterations):
+
         # delta_b = gradient_descent(G)
-        run_time_step(G, delta_r, delta_b)
+
+        run_time_step(G, network)
         update_fig(G)
         pylab.ioff()
 
@@ -50,52 +61,31 @@ def main():
     plt.show()
 
 
-# TODO: use gradient descent algorithm to determine delta_b
-def gradient_descent(G):
-    pass
-    # implement the algorithm here
-    # return delta_b
-
-
-def run_time_step(G, delta_r, delta_b, cur_time=0):
-    current_conditions = {0: 0}
+def run_time_step(G, network, cur_time=0):
+    current_conditions = {}
     network_infection_sum = 0
     for node in G.node.items():
-        add_balls_to_node(G, node[0], delta_r, delta_b)
-        draw = draw_from_superurn(G, node)
+        network.gradient_descent()
+        draw = draw_from_superurn(G, network, node)
         current_conditions[node[0]] = draw
+        add_balls_to_node(G, network, node[0])
         network_infection_sum += node[1]['super_urn']['network_infection']
 
-    average_network_infection = network_infection_sum / NODE_COUNT
-    AVG_NETWORK_INFECTION.append(average_network_infection)
+    AVG_NETWORK_INFECTION.append(network_infection_sum / NODE_COUNT)
 
 
-def draw_from_superurn(G, node):
-    super_urn = construct_super_urn(G, node)
+def draw_from_superurn(G, network, node):
+    super_urn = network.construct_super_urn(node)
     node[1]['prev_draw'] = find_condition(super_urn)
     return node[1]['prev_draw']
 
 
-def construct_super_urn(G, node):
-    # Construct super urns
-    super_urn = {'red': node[1]['urns']['red'], 'black': node[1]['urns']['black']}
-    neighbors = nx.all_neighbors(G, node[0])
-    for neighbor_node in neighbors:
-        super_urn['red'] += G.node[neighbor_node]['urns']['red']
-        super_urn['black'] += G.node[neighbor_node]['urns']['black']
-
-    # network_infection(Si,n) = proportion of the red balls in the node's super urn
-    network_infection = super_urn['red'] / (super_urn['red'] + super_urn['black'])
-    super_urn['network_infection'] = network_infection
-    node[1]['super_urn'] = super_urn
-    return super_urn
-
-
-def add_balls_to_node(G, node_index, added_red, added_black):
+def add_balls_to_node(G, network, node_index):
+    print(network.black_dist)
     if (G.node[node_index]['prev_draw'] == 1):
-        G.node[node_index]['urns']['red'] += added_red
+        G.node[node_index]['urns']['red'] += network.red_dist[node_index]
     elif (G.node[node_index]['prev_draw'] == 0):
-        G.node[node_index]['urns']['black'] += added_black
+        G.node[node_index]['urns']['black'] += network.black_dist[node_index]
 
 
 def find_condition(super_urn):
