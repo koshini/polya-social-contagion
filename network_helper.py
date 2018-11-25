@@ -155,7 +155,6 @@ class NetWorkHelper():
         curing_strat = []
         for node in self.G.node.items():
             curing_strat.append(0)
-        print(curing_strat)
         curing_strat[0] = self.black_budget
 
         for k in range(0,100):

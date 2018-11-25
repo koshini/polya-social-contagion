@@ -10,6 +10,7 @@ from matplotlib.pyplot import pause
 from network_helper import NetWorkHelper
 
 NODE_COUNT = 15
+ITERATIONS = 100
 AVG_NETWORK_INFECTION = []
 
 def main():
@@ -25,7 +26,6 @@ def main():
     }
     
     network = NetWorkHelper(network_initial_condition)
-    iterations = 100
     delta_r = 1
     delta_b = 1
     budget = delta_r * NODE_COUNT
@@ -37,28 +37,14 @@ def main():
     set_positions(G)
     pylab.show()
     pylab.ion()
-
-    # print("Initial network distribution:")
-    # for node in G.node.items():
-    # print(node[0], "red:", node[1]['urns']['red'], "black", node[1]['urns']['black'])
-    # print("\n")
+    fig = plt.figure()
     for node in G.node.items():
         network.construct_super_urn(node)
     
-    for i in range(0, iterations):
-
-        # delta_b = gradient_descent(G)
-
+    for i in range(0, ITERATIONS):
         run_time_step(G, network)
-        update_fig(G)
+        update_fig(G, fig)
         pylab.ioff()
-
-    # Plot average network infection over time
-    plt.figure(2)
-    plt.plot(list(range(iterations)), AVG_NETWORK_INFECTION, color='green', marker='o', markersize=3)
-    plt.ylabel('average network exposure')
-    plt.xlabel('time')
-    plt.show()
 
 
 def run_time_step(G, network, cur_time=0):
@@ -94,19 +80,36 @@ def find_condition(super_urn):
     return choice([0, 1], 1, p=[black / (red + black), red / (red + black)])[0]
 
 
-def update_fig(G):
+def update_fig(G, fig):
     pylab.clf()
-    color_map = set_color(G)
-    nx.draw(G, nx.get_node_attributes(G, 'pos'), node_color=color_map)
+    gs = fig.add_gridspec(16, 16)
+    ax0 = fig.add_subplot(gs[:, :7])
+    ax1 = fig.add_subplot(gs[:, 9:])
+    color_map = infection_rate_to_color(G)
+    nx.draw(G, nx.get_node_attributes(G, 'pos'), ax0, node_color=color_map, linewidths=1, edgecolors='black',
+                     cmap=plt.cm.RdGy)
+
+    ax1.plot(list(range(len(AVG_NETWORK_INFECTION))), AVG_NETWORK_INFECTION, color='green', marker='o', markersize=1)
+    ax1.set_ylabel('Average Network Exposure')
+    ax1.set_xlabel('Time')
+    ax1.set_xlim([0, ITERATIONS])
+    ax1.set_ylim([0, 1])
     pylab.draw()
-    pause(0.1)
+    pause(0.001)
 
 
 def set_positions(G):
-    pos = nx.random_layout(G)
+    pos = nx.spring_layout(G)
     for n, p in pos.items():
         G.node[n]['pos'] = p
 
+
+def infection_rate_to_color(G):
+    color_map = []
+    for node in G.node.items():
+        infection_rate = node[1]['super_urn']['network_infection']
+        color_map.append(1-infection_rate)
+    return color_map
 
 def set_color(G):
     color_map = []
