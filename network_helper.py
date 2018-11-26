@@ -145,11 +145,10 @@ class NetWorkHelper():
             denominator = (self.G.node[nd]['super_urn']['black'] + self.G.node[nd]['super_urn']['red'] + exp_red[nd] + exp_black[nd])**2
             partial_exp_sum += (numerator/denominator)
         return partial_exp_sum
-        
-        
+
     def gradient_descent(self):
-        #This stays constant at every step of the gradient descent right now
-        #due to us only changing our curing strategy
+        # This stays constant at every step of the gradient descent right now
+        # due to us only changing our curing strategy
         exp_red = self.find_superurn_exp_red()
         step = 0.1
         curing_strat = []
@@ -157,24 +156,24 @@ class NetWorkHelper():
             curing_strat.append(0)
         curing_strat[0] = self.black_budget
 
-        for k in range(0,100):
+        for k in range(0, 100):
             next_partial_exposures = []
             next_strat = []
             for node in self.G.node.items():
                 next_strat.append(0)
-                
+
             exp_black = self.find_superurn_exp_black(curing_strat)
             for node in self.G.node.items():
                 next_partial_exposures.append(self.calc_node_partial_exposure(node, curing_strat, exp_red, exp_black))
             min_index = next_partial_exposures.index(min(next_partial_exposures))
             next_strat[min_index] = self.black_budget
-            temp_array = list( map(op.sub, next_strat, curing_strat) )
-            temp_array = [x*step for x in temp_array]
-            curing_strat = list( map(op.add, curing_strat, temp_array) )
-        for index,x in enumerate(curing_strat):
+            temp_array = list(map(op.sub, next_strat, curing_strat))
+            temp_array = [x * step for x in temp_array]
+            curing_strat = list(map(op.add, curing_strat, temp_array))
+        for index, x in enumerate(curing_strat):
             curing_strat[index] = round(x)
         print(curing_strat)
-        self.black_dist = curing_strat             
+        self.black_dist = curing_strat
 
         
         
