@@ -37,7 +37,7 @@ def main():
     set_positions(G)
     pylab.show()
     pylab.ion()
-    fig = plt.figure()
+    fig = plt.figure(figsize=(8,6))
     for node in G.node.items():
         network.construct_super_urn(node)
     
@@ -45,6 +45,7 @@ def main():
         run_time_step(G, network)
         update_fig(G, fig)
         pylab.ioff()
+    plt.show()
 
 
 def run_time_step(G, network, cur_time=0):
@@ -93,7 +94,7 @@ def update_fig(G, fig):
     ax1.set_ylabel('Average Network Exposure')
     ax1.set_xlabel('Time')
     ax1.set_xlim([0, ITERATIONS])
-    ax1.set_ylim([0, 1])
+    ax1.set_ylim([0, 0.6])
     pylab.draw()
     pause(0.001)
 
