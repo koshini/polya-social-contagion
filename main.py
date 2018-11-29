@@ -37,9 +37,13 @@ def main():
     set_positions(G)
     pylab.show()
     pylab.ion()
-    fig = plt.figure(figsize=(8,6))
+    fig = plt.figure(figsize=(16,6))
+    network_infection_sum = 0
     for node in G.node.items():
         network.construct_super_urn(node)
+        network_infection_sum += node[1]['super_urn']['network_infection']
+    AVG_NETWORK_INFECTION.append(network_infection_sum / NODE_COUNT)
+
     
     for i in range(0, ITERATIONS):
         run_time_step(G, network)
@@ -91,10 +95,10 @@ def update_fig(G, fig):
                      cmap=plt.cm.RdGy)
 
     ax1.plot(list(range(len(AVG_NETWORK_INFECTION))), AVG_NETWORK_INFECTION, color='green', marker='o', markersize=1)
-    ax1.set_ylabel('Average Network Exposure')
+    ax1.set_ylabel('Average Network Infection Rate')
     ax1.set_xlabel('Time')
     ax1.set_xlim([0, ITERATIONS])
-    ax1.set_ylim([0, 0.6])
+    ax1.set_ylim([0.2, 0.6])
     pylab.draw()
     pause(0.001)
 
