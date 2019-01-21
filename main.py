@@ -9,7 +9,7 @@ import pylab
 from matplotlib.pyplot import pause
 from network_helper import NetWorkHelper
 
-NODE_COUNT = 15
+NODE_COUNT = 10
 ITERATIONS = 100
 AVG_NETWORK_INFECTION = []
 
@@ -55,12 +55,17 @@ def main():
 def run_time_step(G, network, cur_time=0):
     current_conditions = {}
     network_infection_sum = 0
+    # total_balls = 0
     for node in G.node.items():
-        network.gradient_descent()
+        # network.gradient_descent()
+        balls = network.centrality_ratio_strat(node)
         draw = draw_from_superurn(G, network, node)
         current_conditions[node[0]] = draw
         add_balls_to_node(G, network, node[0])
         network_infection_sum += node[1]['super_urn']['network_infection']
+        # total_balls += balls
+
+    # print(total_balls) # check if total_balls = budget
 
     AVG_NETWORK_INFECTION.append(network_infection_sum / NODE_COUNT)
 

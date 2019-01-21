@@ -18,6 +18,7 @@ class NetWorkHelper():
         self.red_dist = self.equally_divide(self.red_budget)
         self.type = initial_condition['type']
         self.G = None
+        self.closeness_centrality_dict = {}
 
 
     # TODO: Add distribution of red/black balls in network toggle
@@ -174,7 +175,32 @@ class NetWorkHelper():
         for index,x in enumerate(curing_strat):
             curing_strat[index] = round(x)
         print(curing_strat)
-        self.black_dist = curing_strat             
+        self.black_dist = curing_strat
+
+    def calculate_closeness(self):
+        self.closeness_centrality_dict = nx.closeness_centrality(self.G)
+
+    def get_centrality_infection(self):
+        self.calculate_closeness()
+        centrality_infection_sum = 0
+        for index, node in self.G.node.items():
+            degree = self.G.degree(index)
+            closeness_centrality = self.closeness_centrality_dict[index]
+            infection_rate = node['super_urn']['network_infection']
+            centrality_infection = degree*closeness_centrality*infection_rate
+            node['centrality_infection'] = centrality_infection
+            centrality_infection_sum += centrality_infection
+        return centrality_infection_sum
+
+    def centrality_ratio_strat(self, node):
+        centrality_infection_sum = self.get_centrality_infection()
+        ratio = node[1]['centrality_infection'] / centrality_infection_sum
+        balls = round(self.black_budget * ratio)
+        # print(balls)
+
+        self.black_dist.append(balls)
+        return balls
+
 
         
         
