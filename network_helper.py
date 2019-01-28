@@ -14,12 +14,13 @@ class NetWorkHelper():
         self.black = initial_condition['black']
         self.red_budget = initial_condition['red_budget']
         self.black_budget = initial_condition['black_budget']
-        self.black_dist = []
-        self.red_dist = self.equally_divide(self.red_budget)
+        self.red_dist = self.node_count * [0]
+        self.black_dist = self.node_count * [0]
+        self.red_strat = initial_condition['red_strat']
+        self.black_strat = initial_condition['black_strat']
         self.type = initial_condition['type']
         self.G = None
         self.closeness_centrality_dict = {}
-
 
     # TODO: Add distribution of red/black balls in network toggle
     def create_network(self):
@@ -64,7 +65,29 @@ class NetWorkHelper():
         self.set_prev_exposure()
         return self.G
 
-
+    def run_time_step(self):
+        if self.black_strat == 'uniform':
+            self.black_dist = self.equally_divide(self.black_budget)
+        if self.black_strat == 'random':
+            self.black_dist = self.constrained_sample_sum_pos(self.black_budget)            
+        if self.black_strat == 'gradient':
+            self.black_gradient_descent()
+        if self.black_strat == 'centrality':
+            self.centrality_ratio_strat();
+        
+        print('Black dist:', self.black_dist)
+        
+        if self.red_strat == 'uniform':
+            self.red_dist = self.equally_divide(self.red_budget)
+        if self.red_strat == 'random':
+            self.red_dist = self.constrained_sample_sum_pos(self.red_budget)            
+        if self.red_strat == 'gradient':
+            self.red_gradient_descent()
+        if self.red_strat == 'centrality':
+            self.centrality_ratio_strat()
+            
+        print('Red dist:', self.black_dist)
+        
     def equally_divide(self, total):
         if self.node_count <= 0:
             return []
@@ -110,7 +133,9 @@ class NetWorkHelper():
         node[1]['super_urn'] = super_urn
         return super_urn
     
-    def find_superurn_exp_red(self):
+    def find_superurn_exp_red(self, infecting_strat = None):
+        if infecting_strat == None:
+            infecting_strat = self.red_dist
         exp_red = {}
         for node in self.G.node.items():
             exp_red_temp = 0 
@@ -121,8 +146,10 @@ class NetWorkHelper():
             exp_red[node[0]] = exp_red_temp
         return exp_red
             
+    def find_superurn_exp_black(self, curing_strat = None):
+        if curing_strat == None:
+            curing_strat = self.black_dist
             
-    def find_superurn_exp_black(self, curing_strat):
         exp_black = {}
         for node in self.G.node.items():
             exp_black_temp = 0 
@@ -133,6 +160,7 @@ class NetWorkHelper():
             exp_black[node[0]] = exp_black_temp
         return exp_black
     
+
     def calc_node_partial_exposure(self, node, curing_strat, exp_red, exp_black):
         node_exp = node[1]['super_urn']['network_infection']
         neighbors = nx.all_neighbors(self.G, node[0])
@@ -147,17 +175,18 @@ class NetWorkHelper():
             partial_exp_sum += (numerator/denominator)
         return partial_exp_sum
         
-        
-    def gradient_descent(self):
+    #Also doesnt always output full budget worth of distribution
+    def black_gradient_descent(self):
         #This stays constant at every step of the gradient descent right now
         #due to us only changing our curing strategy
         exp_red = self.find_superurn_exp_red()
         step = 0.1
-        curing_strat = []
-        for node in self.G.node.items():
-            curing_strat.append(0)
-        curing_strat[0] = self.black_budget
+        curing_strat = self.node_count * [0]
+        infecting_strat = self.node_count * [0]
 
+        curing_strat[0] = self.black_budget
+        infecting_strat[0] = self.red_budget
+        
         for k in range(0,100):
             next_partial_exposures = []
             next_strat = []
@@ -174,8 +203,36 @@ class NetWorkHelper():
             curing_strat = list( map(op.add, curing_strat, temp_array) )
         for index,x in enumerate(curing_strat):
             curing_strat[index] = round(x)
-        print(curing_strat)
         self.black_dist = curing_strat
+    
+    def red_gradient_descent(self):
+        #This stays constant at every step of the gradient descent right now
+        #due to us only changing our curing strategy
+        exp_black = self.find_superurn_exp_black()
+        step = 0.1
+        curing_strat = self.node_count * [0]
+        infecting_strat = self.node_count * [0]
+
+        curing_strat[0] = self.black_budget
+        infecting_strat[0] = self.red_budget
+        
+        for k in range(0,100):
+            next_partial_exposures = []
+            next_strat = []
+            for node in self.G.node.items():
+                next_strat.append(0)
+                
+            exp_red = self.find_superurn_exp_black(infecting_strat)
+            for node in self.G.node.items():
+                next_partial_exposures.append(self.calc_node_partial_exposure(node, infecting_strat, exp_red, exp_black))
+            min_index = next_partial_exposures.index(min(next_partial_exposures))
+            next_strat[min_index] = self.red_budget
+            temp_array = list( map(op.sub, next_strat, infecting_strat) )
+            temp_array = [x*step for x in temp_array]
+            infecting_strat = list( map(op.add, infecting_strat, temp_array) )
+        for index,x in enumerate(infecting_strat):
+            infecting_strat[index] = round(x)
+        self.red_dist = infecting_strat
 
     def calculate_closeness(self):
         self.closeness_centrality_dict = nx.closeness_centrality(self.G)
@@ -192,13 +249,15 @@ class NetWorkHelper():
             centrality_infection_sum += centrality_infection
         return centrality_infection_sum
 
-    def centrality_ratio_strat(self, node):
-        centrality_infection_sum = self.get_centrality_infection()
-        ratio = node[1]['centrality_infection'] / centrality_infection_sum
-        balls = round(self.black_budget * ratio)
-        # print(balls)
-
-        self.black_dist.append(balls)
+    #TODO: Fix this: This does not always output a distribution that adds to budget.
+    #We should probably also run the entire strat with one call and not give it node by node
+    def centrality_ratio_strat(self):
+        for node in self.G.node.items():
+            centrality_infection_sum = self.get_centrality_infection()
+            ratio = node[1]['centrality_infection'] / centrality_infection_sum
+            print(self.black_budget * ratio)
+            balls = round(self.black_budget * ratio)
+            self.black_dist[node[0]] = balls
         return balls
 
 

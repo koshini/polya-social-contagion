@@ -9,8 +9,8 @@ import pylab
 from matplotlib.pyplot import pause
 from network_helper import NetWorkHelper
 
-NODE_COUNT = 10
-ITERATIONS = 100
+NODE_COUNT = 30
+ITERATIONS = 25
 AVG_NETWORK_INFECTION = []
 
 def main():
@@ -21,6 +21,8 @@ def main():
         'black': 500,
         'red_budget': 50,
         'black_budget': 50,
+        'red_strat': 'gradient',
+        'black_strat': 'gradient',
         'dist': 'equal',
         'type': 'barabasi'
     }
@@ -28,10 +30,6 @@ def main():
     network = NetWorkHelper(network_initial_condition)
     delta_r = 1
     delta_b = 1
-    budget = delta_r * NODE_COUNT
-    # set up initial budget distribution
-    y = [0]*NODE_COUNT
-    y[1] = budget
 
     G = network.create_network()
     set_positions(G)
@@ -56,16 +54,15 @@ def run_time_step(G, network, cur_time=0):
     current_conditions = {}
     network_infection_sum = 0
     # total_balls = 0
+
+    #network.gradient_descent()
+    network.run_time_step()
     for node in G.node.items():
-        # network.gradient_descent()
-        balls = network.centrality_ratio_strat(node)
+        #network.centrality_ratio_strat(node)
         draw = draw_from_superurn(G, network, node)
         current_conditions[node[0]] = draw
         add_balls_to_node(G, network, node[0])
         network_infection_sum += node[1]['super_urn']['network_infection']
-        # total_balls += balls
-
-    # print(total_balls) # check if total_balls = budget
 
     AVG_NETWORK_INFECTION.append(network_infection_sum / NODE_COUNT)
 
@@ -77,7 +74,6 @@ def draw_from_superurn(G, network, node):
 
 
 def add_balls_to_node(G, network, node_index):
-    print(network.black_dist)
     if (G.node[node_index]['prev_draw'] == 1):
         G.node[node_index]['urns']['red'] += network.red_dist[node_index]
     elif (G.node[node_index]['prev_draw'] == 0):
