@@ -73,7 +73,7 @@ class NetWorkHelper():
         if self.black_strat == 'gradient':
             self.black_gradient_descent()
         if self.black_strat == 'centrality':
-            self.centrality_ratio_strat();
+            self.black_centrality_ratio_strat()
         
         print('Black dist:', self.black_dist)
         
@@ -84,9 +84,9 @@ class NetWorkHelper():
         if self.red_strat == 'gradient':
             self.red_gradient_descent()
         if self.red_strat == 'centrality':
-            self.centrality_ratio_strat()
+            self.red_centrality_ratio_strat()
             
-        print('Red dist:', self.black_dist)
+        print('Red dist:', self.red_dist)
         
     def equally_divide(self, total):
         if self.node_count <= 0:
@@ -251,13 +251,22 @@ class NetWorkHelper():
 
     #TODO: Fix this: This does not always output a distribution that adds to budget.
     #We should probably also run the entire strat with one call and not give it node by node
-    def centrality_ratio_strat(self):
+    def black_centrality_ratio_strat(self):
         for node in self.G.node.items():
             centrality_infection_sum = self.get_centrality_infection()
             ratio = node[1]['centrality_infection'] / centrality_infection_sum
             print(self.black_budget * ratio)
             balls = round(self.black_budget * ratio)
             self.black_dist[node[0]] = balls
+        return balls
+
+    def red_centrality_ratio_strat(self):
+        for node in self.G.node.items():
+            centrality_infection_sum = self.get_centrality_infection()
+            ratio = node[1]['centrality_infection'] / centrality_infection_sum
+            print(self.red_budget * ratio)
+            balls = round(self.red_budget * ratio)
+            self.red_dist[node[0]] = balls
         return balls
 
 
