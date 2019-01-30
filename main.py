@@ -9,11 +9,31 @@ import pylab
 from matplotlib.pyplot import pause
 from network_helper import NetWorkHelper
 
-NODE_COUNT = 30
-ITERATIONS = 25
-AVG_NETWORK_INFECTION = []
+NODE_COUNT = 50
+ITERATIONS = 100
+RUNS = 1 # run the same strategy 10 times to get a smooth curve
+
 
 def main():
+    ##### Scenario 1: black: gradient, red: uniform
+    network_initial_condition = {
+        'node_count': NODE_COUNT,
+        'edges': 2,
+        'red': 500,
+        'black': 500,
+        'red_budget': 50,
+        'black_budget': 50,
+        'red_strat': 'uniform',
+        'black_strat': 'gradient',
+        'dist': 'equal',
+        'type': 'barabasi'
+    }
+
+    network = NetWorkHelper(network_initial_condition)
+    G = network.create_network()
+    infection_rate_1 = run_multiple_simulations(G, network)
+
+    ### Scenario 2:both gradient
     network_initial_condition = {
         'node_count': NODE_COUNT,
         'edges': 2,
@@ -26,45 +46,89 @@ def main():
         'dist': 'equal',
         'type': 'barabasi'
     }
-    
+
     network = NetWorkHelper(network_initial_condition)
-    delta_r = 1
-    delta_b = 1
-
     G = network.create_network()
-    set_positions(G)
-    pylab.show()
-    pylab.ion()
-    fig = plt.figure(figsize=(16,6))
-    network_infection_sum = 0
-    for node in G.node.items():
-        network.construct_super_urn(node)
-        network_infection_sum += node[1]['super_urn']['network_infection']
-    AVG_NETWORK_INFECTION.append(network_infection_sum / NODE_COUNT)
+    infection_rate_2 = run_multiple_simulations(G, network)
 
-    
-    for i in range(0, ITERATIONS):
-        run_time_step(G, network)
-        update_fig(G, fig)
-        pylab.ioff()
+
+    #### Scenario 3: black: uniform, red: gradient
+    network_initial_condition = {
+        'node_count': NODE_COUNT,
+        'edges': 2,
+        'red': 500,
+        'black': 500,
+        'red_budget': 50,
+        'black_budget': 50,
+        'red_strat': 'gradient',
+        'black_strat': 'uniform',
+        'dist': 'equal',
+        'type': 'barabasi'
+    }
+
+    network = NetWorkHelper(network_initial_condition)
+    G = network.create_network()
+    infection_rate_3 = run_multiple_simulations(G, network)
+
+    plt.plot(list(range(ITERATIONS)), infection_rate_1)
+    plt.plot(list(range(ITERATIONS)), infection_rate_2)
+    plt.plot(list(range(ITERATIONS)), infection_rate_3)
+    plt.legend(['r, b*', 'r*, b*', 'r*, b'], loc='upper left')
+    # plt.legend(['r: heuristic, b: gradient descent'], loc='upper left')
+
+    plt.axis([0,ITERATIONS, 0, 1])
     plt.show()
 
+def run_multiple_simulations(G, network):
+    arrays_of_infection_rate = []
+    for i in range(RUNS):
+        print(i)
+        infection_array = simulate_network_infection(G, network)
+        arrays_of_infection_rate.append(infection_array)
 
-def run_time_step(G, network, cur_time=0):
+    average_infection_rate_overtime = []
+    for t in range(ITERATIONS):
+        sum = 0
+        for i in range(len(arrays_of_infection_rate)):
+            sum += arrays_of_infection_rate[i][t]
+        average = sum / len(arrays_of_infection_rate)
+        average_infection_rate_overtime.append(average)
+
+    print(average_infection_rate_overtime)
+    return average_infection_rate_overtime
+
+def simulate_network_infection(G, network):
+    set_positions(G)
+    infection_array = []
+    # pylab.show()
+    # pylab.ion()
+    # fig = plt.figure(figsize=(16, 6))
+    for node in G.node.items():
+        network.construct_super_urn(node)
+    for i in range(0, ITERATIONS):
+        run_time_step(G, network, infection_array)
+        # update_fig(G, fig)
+        # pylab.ioff()
+
+    # update_fig(G, fig, infection_array)
+    # plt.show()
+    return infection_array
+
+
+def run_time_step(G, network, infection_array):
     current_conditions = {}
     network_infection_sum = 0
     # total_balls = 0
 
-    #network.gradient_descent()
     network.run_time_step()
     for node in G.node.items():
-        #network.centrality_ratio_strat(node)
         draw = draw_from_superurn(G, network, node)
         current_conditions[node[0]] = draw
         add_balls_to_node(G, network, node[0])
         network_infection_sum += node[1]['super_urn']['network_infection']
 
-    AVG_NETWORK_INFECTION.append(network_infection_sum / NODE_COUNT)
+    average_infection = network_infection_sum / NODE_COUNT
+    infection_array.append(average_infection)
 
 
 def draw_from_superurn(G, network, node):
@@ -86,7 +150,7 @@ def find_condition(super_urn):
     return choice([0, 1], 1, p=[black / (red + black), red / (red + black)])[0]
 
 
-def update_fig(G, fig):
+def update_fig(G, fig, infection_array):
     pylab.clf()
     gs = fig.add_gridspec(16, 16)
     ax0 = fig.add_subplot(gs[:, :7])
@@ -95,11 +159,11 @@ def update_fig(G, fig):
     nx.draw(G, nx.get_node_attributes(G, 'pos'), ax0, node_color=color_map, linewidths=1, edgecolors='black',
                      cmap=plt.cm.RdGy)
 
-    ax1.plot(list(range(len(AVG_NETWORK_INFECTION))), AVG_NETWORK_INFECTION, color='green', marker='o', markersize=1)
+    ax1.plot(list(range(len(infection_array))), infection_array, color='green', marker='o', markersize=1)
     ax1.set_ylabel('Average Network Infection Rate')
     ax1.set_xlabel('Time')
     ax1.set_xlim([0, ITERATIONS])
-    ax1.set_ylim([0.2, 0.6])
+    ax1.set_ylim([0, 1])
     pylab.draw()
     pause(0.001)
 
