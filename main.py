@@ -9,9 +9,9 @@ import pylab
 from matplotlib.pyplot import pause
 from network_helper import NetWorkHelper
 
-NODE_COUNT = 3
-ITERATIONS = 50
-RUNS = 10 #run the same strategy 10 times to get a smooth curve
+NODE_COUNT = 50
+ITERATIONS = 100
+RUNS = 1 # run the same strategy 10 times to get a smooth curve
 
 
 def main():
@@ -19,10 +19,10 @@ def main():
     network_initial_condition = {
         'node_count': NODE_COUNT,
         'edges': 2,
-        'red': 300,
-        'black': 300,
-        'red_budget': 30,
-        'black_budget': 30,
+        'red': 500,
+        'black': 500,
+        'red_budget': 50,
+        'black_budget': 50,
         'red_strat': 'uniform',
         'black_strat': 'gradient',
         'dist': 'equal',
@@ -33,16 +33,16 @@ def main():
     G = network.create_network()
     infection_rate_1 = run_multiple_simulations(G, network)
 
-    ##### Scenario 2: black: uniform, red: gradient
+    ### Scenario 2:both gradient
     network_initial_condition = {
         'node_count': NODE_COUNT,
         'edges': 2,
-        'red': 300,
-        'black': 300,
-        'red_budget': 30,
-        'black_budget': 30,
+        'red': 500,
+        'black': 500,
+        'red_budget': 50,
+        'black_budget': 50,
         'red_strat': 'gradient',
-        'black_strat': 'uniform',
+        'black_strat': 'gradient',
         'dist': 'equal',
         'type': 'barabasi'
     }
@@ -52,16 +52,16 @@ def main():
     infection_rate_2 = run_multiple_simulations(G, network)
 
 
-    ##### Scenario 3: both gradient
+    #### Scenario 3: black: uniform, red: gradient
     network_initial_condition = {
         'node_count': NODE_COUNT,
         'edges': 2,
-        'red': 300,
-        'black': 300,
-        'red_budget': 30,
-        'black_budget': 30,
+        'red': 500,
+        'black': 500,
+        'red_budget': 50,
+        'black_budget': 50,
         'red_strat': 'gradient',
-        'black_strat': 'gradient',
+        'black_strat': 'uniform',
         'dist': 'equal',
         'type': 'barabasi'
     }
@@ -70,11 +70,13 @@ def main():
     G = network.create_network()
     infection_rate_3 = run_multiple_simulations(G, network)
 
-    # plt.plot(list(range(ITERATIONS)), infection_rate_1)
-    # plt.plot(list(range(ITERATIONS)), infection_rate_2)
+    plt.plot(list(range(ITERATIONS)), infection_rate_1)
+    plt.plot(list(range(ITERATIONS)), infection_rate_2)
     plt.plot(list(range(ITERATIONS)), infection_rate_3)
-    # plt.legend(['r, b*', 'r*, b', 'r*, b*'], loc='upper left')
-    plt.axis([0,ITERATIONS , 0, 1])
+    plt.legend(['r, b*', 'r*, b*', 'r*, b'], loc='upper left')
+    # plt.legend(['r: heuristic, b: gradient descent'], loc='upper left')
+
+    plt.axis([0,ITERATIONS, 0, 1])
     plt.show()
 
 def run_multiple_simulations(G, network):
@@ -94,7 +96,6 @@ def run_multiple_simulations(G, network):
 
     print(average_infection_rate_overtime)
     return average_infection_rate_overtime
-
 
 def simulate_network_infection(G, network):
     set_positions(G)

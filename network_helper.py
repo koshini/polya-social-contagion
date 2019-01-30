@@ -255,7 +255,6 @@ class NetWorkHelper():
         for node in self.G.node.items():
             centrality_infection_sum = self.get_centrality_infection()
             ratio = node[1]['centrality_infection'] / centrality_infection_sum
-            print(self.black_budget * ratio)
             balls = round(self.black_budget * ratio)
             self.black_dist[node[0]] = balls
         return balls
@@ -264,7 +263,6 @@ class NetWorkHelper():
         for node in self.G.node.items():
             centrality_infection_sum = self.get_centrality_infection()
             ratio = node[1]['centrality_infection'] / centrality_infection_sum
-            print(self.red_budget * ratio)
             balls = round(self.red_budget * ratio)
             self.red_dist[node[0]] = balls
         return balls
