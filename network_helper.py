@@ -20,7 +20,6 @@ class NetWorkHelper():
         self.black_strat = initial_condition['black_strat']
         self.type = initial_condition['type']
         self.G = None
-        self.closeness_centrality_dict = {}
 
     # TODO: Add distribution of red/black balls in network toggle
     def create_network(self):
@@ -39,7 +38,7 @@ class NetWorkHelper():
         if self.dist == 'random':
             # Creates random distribution of starting red and black balls between all nodes
             red_dist = self.constrained_sum_sample_pos(self.red)
-            black_dist = self.constrained_sum_sample_po(self.black)
+            black_dist = self.constrained_sum_sample_pos(self.black)
 
         elif self.dist == 'equal':
             red_dist = self.equally_divide(self.red)
@@ -48,11 +47,11 @@ class NetWorkHelper():
         # Add distributions to urn
         for i in range(0, self.node_count):
             urns[i] = {'red': red_dist[i], 'black': black_dist[i]}
-            
+
         # Adds unique urn to each node in network
         nx.set_node_attributes(G, name="urns", values=urns)
         nx.set_node_attributes(G, name="prev_draw", values=-1)
-        nx.set_node_attributes(G, name="prev_exposure", values=prev_exposure)
+        nx.set_node_attributes(G, name="prev_exposure", values=prev_exposure) # not being used
         nx.set_node_attributes(G, name="prev_deltar", values=0)
         nx.set_node_attributes(G, name="prev_deltab", values=0)
         
@@ -76,17 +75,20 @@ class NetWorkHelper():
             self.black_centrality_ratio_strat()
         
         print('Black dist:', self.black_dist)
-        
+
         if self.red_strat == 'uniform':
             self.red_dist = self.equally_divide(self.red_budget)
         if self.red_strat == 'random':
-            self.red_dist = self.constrained_sample_sum_pos(self.red_budget)            
+            self.red_dist = self.constrained_sample_sum_pos(self.red_budget)
         if self.red_strat == 'gradient':
             self.red_gradient_descent()
         if self.red_strat == 'centrality':
             self.red_centrality_ratio_strat()
-            
+
         print('Red dist:', self.red_dist)
+
+        
+
         
     def equally_divide(self, total):
         if self.node_count <= 0:
@@ -103,8 +105,8 @@ class NetWorkHelper():
         dividers = sorted(random.sample(range(1, total), self.node_count - 1))
         return [a - b for a, b in zip(dividers + [total], [0] + dividers)]
 
+    # Not being used
     def set_prev_exposure(self):
-        
         for node in self.G.node.items():
             total_red = 0
             total_balls = 0
@@ -136,6 +138,7 @@ class NetWorkHelper():
     def find_superurn_exp_red(self, infecting_strat = None):
         if infecting_strat == None:
             infecting_strat = self.red_dist
+
         exp_red = {}
         for node in self.G.node.items():
             exp_red_temp = 0 
@@ -161,7 +164,7 @@ class NetWorkHelper():
         return exp_black
     
 
-    def calc_node_partial_exposure(self, node, curing_strat, exp_red, exp_black):
+    def calc_node_partial_exposure(self, node, exp_red, exp_black):
         node_exp = node[1]['super_urn']['network_infection']
         neighbors = nx.all_neighbors(self.G, node[0])
         all_nodes = []
@@ -195,7 +198,7 @@ class NetWorkHelper():
                 
             exp_black = self.find_superurn_exp_black(curing_strat)
             for node in self.G.node.items():
-                next_partial_exposures.append(self.calc_node_partial_exposure(node, curing_strat, exp_red, exp_black))
+                next_partial_exposures.append(self.calc_node_partial_exposure(node, exp_red, exp_black))
             min_index = next_partial_exposures.index(min(next_partial_exposures))
             next_strat[min_index] = self.black_budget
             temp_array = list( map(op.sub, next_strat, curing_strat) )
@@ -224,7 +227,7 @@ class NetWorkHelper():
                 
             exp_red = self.find_superurn_exp_black(infecting_strat)
             for node in self.G.node.items():
-                next_partial_exposures.append(self.calc_node_partial_exposure(node, infecting_strat, exp_red, exp_black))
+                next_partial_exposures.append(self.calc_node_partial_exposure(node, exp_red, exp_black))
             min_index = next_partial_exposures.index(min(next_partial_exposures))
             next_strat[min_index] = self.red_budget
             temp_array = list( map(op.sub, next_strat, infecting_strat) )
@@ -234,16 +237,16 @@ class NetWorkHelper():
             infecting_strat[index] = round(x)
         self.red_dist = infecting_strat
 
-    def calculate_closeness(self):
-        self.closeness_centrality_dict = nx.closeness_centrality(self.G)
-
     def get_centrality_infection(self):
-        self.calculate_closeness()
+        # closeness centrality
+        closeness_centrality_dict = nx.closeness_centrality(self.G)
+
         centrality_infection_sum = 0
         for index, node in self.G.node.items():
             degree = self.G.degree(index)
-            closeness_centrality = self.closeness_centrality_dict[index]
+            closeness_centrality = closeness_centrality_dict[index]
             infection_rate = node['super_urn']['network_infection']
+            ##### parameters: degree, closeness, infection
             centrality_infection = degree*closeness_centrality*infection_rate
             node['centrality_infection'] = centrality_infection
             centrality_infection_sum += centrality_infection
