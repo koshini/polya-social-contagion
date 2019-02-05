@@ -24,9 +24,10 @@ def main():
         'red_budget': 50,
         'black_budget': 50,
         'red_strat': 'uniform',
-        'black_strat': 'gradient',
+        'black_strat': 'heuristic',
         'dist': 'equal',
-        'type': 'barabasi'
+        'type': 'barabasi',
+        'heuristic_param': ['centrality', 'degree', 'infection']
     }
 
     infection_rate_1 = run_multiple_simulations(network_initial_condition)
@@ -45,7 +46,7 @@ def main():
         'type': 'barabasi'
     }
 
-    infection_rate_2 = run_multiple_simulations(network_initial_condition)
+    # infection_rate_2 = run_multiple_simulations(network_initial_condition)
 
 
     #### Scenario 3: black: uniform, red: gradient
@@ -62,11 +63,11 @@ def main():
         'type': 'barabasi'
     }
 
-    infection_rate_3 = run_multiple_simulations(network_initial_condition)
+    # infection_rate_3 = run_multiple_simulations(network_initial_condition)
 
     plt.plot(list(range(ITERATIONS)), infection_rate_1)
-    plt.plot(list(range(ITERATIONS)), infection_rate_2)
-    plt.plot(list(range(ITERATIONS)), infection_rate_3)
+    # plt.plot(list(range(ITERATIONS)), infection_rate_2)
+    # plt.plot(list(range(ITERATIONS)), infection_rate_3)
     plt.legend(['r, b*', 'r*, b*', 'r*, b'], loc='upper left')
     # plt.legend(['r: heuristic, b: gradient descent'], loc='upper left')
 
@@ -89,7 +90,7 @@ def run_multiple_simulations(network_initial_condition):
         average = sum / len(arrays_of_infection_rate)
         average_infection_rate_overtime.append(average)
 
-    print(average_infection_rate_overtime)
+    # print(average_infection_rate_overtime)
     return average_infection_rate_overtime
 
 def simulate_network_infection(network_initial_condition):
@@ -109,7 +110,7 @@ def simulate_network_infection(network_initial_condition):
 
     # update_fig(G, fig, infection_array)
     # plt.show()
-    print(infection_array)
+    # print(infection_array)
     print('------------------------------------------')
     return infection_array
 

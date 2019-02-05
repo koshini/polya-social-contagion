@@ -19,6 +19,7 @@ class NetWorkHelper():
         self.red_strat = initial_condition['red_strat']
         self.black_strat = initial_condition['black_strat']
         self.type = initial_condition['type']
+        self.heuristic_param = initial_condition['heuristic_param']
         self.G = None
 
     # TODO: Add distribution of red/black balls in network toggle
@@ -71,10 +72,12 @@ class NetWorkHelper():
             self.black_dist = self.constrained_sample_sum_pos(self.black_budget)            
         if self.black_strat == 'gradient':
             self.black_gradient_descent()
-        if self.black_strat == 'centrality':
-            self.black_centrality_ratio_strat()
+        if self.black_strat == 'heuristic':
+            self.black_heuristic_strat()
+
+
         
-        print('Black dist:', self.black_dist)
+        # print('Black dist:', self.black_dist)
 
         if self.red_strat == 'uniform':
             self.red_dist = self.equally_divide(self.red_budget)
@@ -82,10 +85,10 @@ class NetWorkHelper():
             self.red_dist = self.constrained_sample_sum_pos(self.red_budget)
         if self.red_strat == 'gradient':
             self.red_gradient_descent()
-        if self.red_strat == 'centrality':
-            self.red_centrality_ratio_strat()
+        if self.red_strat == 'heuristic':
+            self.red_heuristic_strat()
 
-        print('Red dist:', self.red_dist)
+        # print('Red dist:', self.red_dist)
 
         
 
@@ -237,35 +240,46 @@ class NetWorkHelper():
             infecting_strat[index] = round(x)
         self.red_dist = infecting_strat
 
-    def get_centrality_infection(self):
-        # closeness centrality
+    def get_heuristic_parameters(self):
         closeness_centrality_dict = nx.closeness_centrality(self.G)
+        parameter_sum = 0
 
-        centrality_infection_sum = 0
         for index, node in self.G.node.items():
-            degree = self.G.degree(index)
-            closeness_centrality = closeness_centrality_dict[index]
-            infection_rate = node['super_urn']['network_infection']
+            if 'degree' in self.heuristic_param:
+                degree = self.G.degree(index)
+            else:
+                degree = 1
+
+            if 'centrality' in self.heuristic_param:
+                centrality = closeness_centrality_dict[index]
+            else:
+                centrality = 1
+
+            if 'infection' in self.heuristic_param:
+                infection = node['super_urn']['network_infection']
+
+            else:
+                infection = 1
             ##### parameters: degree, closeness, infection
-            centrality_infection = degree*closeness_centrality*infection_rate
-            node['centrality_infection'] = centrality_infection
-            centrality_infection_sum += centrality_infection
-        return centrality_infection_sum
+            heuristic_parameters = degree*centrality*infection
+            node['heuristic_parameters'] = heuristic_parameters
+            parameter_sum += heuristic_parameters
+        return parameter_sum
 
     #TODO: Fix this: This does not always output a distribution that adds to budget.
     #We should probably also run the entire strat with one call and not give it node by node
-    def black_centrality_ratio_strat(self):
+    def black_heuristic_strat(self):
         for node in self.G.node.items():
-            centrality_infection_sum = self.get_centrality_infection()
-            ratio = node[1]['centrality_infection'] / centrality_infection_sum
+            parameter_sum = self.get_heuristic_parameters()
+            ratio = node[1]['heuristic_parameters'] / parameter_sum
             balls = round(self.black_budget * ratio)
             self.black_dist[node[0]] = balls
         return balls
 
-    def red_centrality_ratio_strat(self):
+    def red_heuristic_strat(self):
         for node in self.G.node.items():
-            centrality_infection_sum = self.get_centrality_infection()
-            ratio = node[1]['centrality_infection'] / centrality_infection_sum
+            parameter_sum = self.get_heuristic_parameters()
+            ratio = node[1]['heuristic_parameters'] / parameter_sum
             balls = round(self.red_budget * ratio)
             self.red_dist[node[0]] = balls
         return balls
