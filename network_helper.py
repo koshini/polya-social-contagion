@@ -24,12 +24,18 @@ class NetWorkHelper():
 
     # TODO: Add distribution of red/black balls in network toggle
     def create_network(self, G=None):
-        # Generate a barabasi albert graph with node_count nodes
-        # Setting the second parameter to 1 means each node added will only have one edge to begin
-        if self.type == 'barabasi':
-            G = nx.barabasi_albert_graph(self.node_count, self.edges)
-        elif self.type == 'path':
-            G = nx.path_graph(self.node_count)
+        # if no graph is provided, we simulate one
+        #####
+        # G=None
+        if not G:
+            # Generate a barabasi albert graph with node_count nodes
+            # Setting the second parameter to 1 means each node added will only have one edge to begin
+            if self.type == 'barabasi':
+                G = nx.barabasi_albert_graph(self.node_count, self.edges)
+            elif self.type == 'path':
+                G = nx.path_graph(self.node_count)
+
+
         # Initializes urn dictionary
         urns = {}
         prev_exposure = []
@@ -46,8 +52,10 @@ class NetWorkHelper():
             black_dist = self.equally_divide(self.black)
 
         # Add distributions to urn
-        for i in range(0, self.node_count):
-            urns[i] = {'red': red_dist[i], 'black': black_dist[i]}
+        i = 0
+        for key in G.nodes.keys():
+            urns[key] = {'red': red_dist[i], 'black': black_dist[i]}
+            i += 1
 
         # Adds unique urn to each node in network
         nx.set_node_attributes(G, name="urns", values=urns)
@@ -57,12 +65,18 @@ class NetWorkHelper():
         nx.set_node_attributes(G, name="prev_deltab", values=0)
         
         #Set the intitial budget distributions
-        G.node[0]['prev_deltar'] = self.red_budget
-        G.node[0]['prev_deltab'] = self.black_budget
+        # G.node[0]['prev_deltar'] = self.red_budget
+        # G.node[0]['prev_deltab'] = self.black_budget
         
         #Set initial exposure rate
         self.G = G
         self.set_prev_exposure()
+
+
+        # construct superurn
+        for node in G.node.items():
+            self.construct_super_urn(node)
+
         return self.G
 
     def run_time_step(self):

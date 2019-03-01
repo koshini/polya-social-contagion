@@ -2,6 +2,8 @@ import tweepy, json, collections, functools, operator
 import networkx as nx
 from main import set_positions
 import pylab
+import matplotlib.pyplot as plt
+import pandas as pd
 
 oauth = json.loads(open('oauth.json', 'r').read())
 
@@ -15,11 +17,12 @@ screen_name = 'name_alreadytak'
 def main():
     # get_first_friends()
     # get_second_friends()
-    graph = create_graph('data/data.edgelist')
-    pylab.show()
-    pylab.ion()
+    graph = create_graph_from_matrix('data/fb-adjacency-matrix.csv')
+    # pylab.show()
+    # pylab.ion()
     draw_graph(graph)
-    pylab.ioff()
+    # pylab.ioff()
+
 
     # fill_out_graph()
     print()
@@ -80,16 +83,23 @@ def write_edgelist(follower, followed):
     f.write("%s %s\n" % (follower, followed))
     f.close()
 
-def create_graph(filename):
+def create_graph_from_edgelist(filename):
     # Edgelist looks like:
     # node1 node2
     # node3 node1
     # node1 node3
     # ...
-    graph = nx.read_edgelist(filename, create_using=nx.DiGraph())
+    G = nx.read_edgelist(filename, create_using=nx.Graph())
     print("Read in edgelist file ", filename)
-    print(nx.info(graph))
-    return graph
+    print(nx.info(G))
+    return G
+
+# takes an adjacency matrix in csv format
+def create_graph_from_matrix(filename):
+    input_data = pd.read_csv(filename, header=None)
+    G = nx.Graph(input_data.values)
+    print(nx.info(G))
+    return G
 
 
 def fill_out_graph():
@@ -128,7 +138,7 @@ def draw_graph(G):
     set_positions(G)
     color_map = set_color(G)
     nx.draw(G, nx.get_node_attributes(G, 'pos'), node_color=color_map, node_size=3)
-    pylab.draw()
+    plt.show()
 
 
 def set_color(G):
