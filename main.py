@@ -8,13 +8,107 @@ from numpy.random import choice
 import pylab
 from matplotlib.pyplot import pause
 from network_helper import NetWorkHelper
+import csv
 
-NODE_COUNT = 10
+NODE_COUNT = 100
 ITERATIONS = 100
-RUNS = 10 # run the same strategy 10 times to get a smooth curve
-
+RUNS = 30 # run the same strategy 10 times to get a smooth curve
 
 def main():
+    ##### Scenario 1: black: gradient, red: uniform
+    #multiple_simulations()
+    single_simulation()
+
+def single_simulation():
+    ##### Scenario 1: black: gradient, red: uniform
+    network_initial_condition = {
+        'node_count': NODE_COUNT,
+        'parameter': 2,
+        'red': 5000,
+        'black': 5000,
+        'red_budget': 1000,
+        'black_budget': 1000,
+        'red_strat': 'uniform',
+        'black_strat': 'centrality',
+        'dist': 'random',
+        'type': 'barabasi'
+    }
+    
+    network = NetWorkHelper(network_initial_condition)
+
+    G = network.create_network()
+    set_positions(G)
+    pylab.show()
+    pylab.ion()
+    fig = plt.figure(figsize=(16,6))
+    plt.axis([0,ITERATIONS, 0.1, 0.9])
+    network_infection_sum = 0
+    
+    infection_array = []
+    for node in G.node.items():
+        network.construct_super_urn(node)
+        network_infection_sum += node[1]['super_urn']['network_infection']
+    infection_array.append(network_infection_sum/NODE_COUNT)
+    
+    #Open csv logger
+    with open('node_data_test.csv', mode='w', newline = '') as node_data:
+        data_writer = csv.writer(node_data, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        #Label Nodes
+        data_writer.writerow(range(0,NODE_COUNT))
+        #Label degree of each node
+        degree = []
+        for index, node in G.node.items():
+            degree.append(G.degree(index))
+        data_writer.writerow(degree)
+        #Label centrality of each node
+        closeness_centrality = list(nx.closeness_centrality(G).values())
+        data_writer.writerow(closeness_centrality)
+        
+        for i in range(0, ITERATIONS):
+            #Add black distribution and node infection after each
+            network_infection = []
+            for node in G.node.items():
+                network_infection.append(node[1]['super_urn']['network_infection'])
+            data_writer.writerow(network_infection)
+            
+            run_time_step(G, network, infection_array)
+            
+            data_writer.writerow(network.black_dist)
+            
+            #update_fig(G, fig, infection_array)
+            #pylab.ioff()
+            
+        #plt.show()
+     
+    
+    ave_entropy = []
+    for i in range (0,ITERATIONS+1):
+        entropy_sum = 0
+        for node in G.node.items():
+            entropy_sum += node[1]['entropy'][i]
+        ave_entropy.append(entropy_sum/NODE_COUNT)
+        if i > 0:
+            print(ave_entropy[i]*100 , infection_array[i]*100)
+    
+    ave_entropy = []
+    for i in range (0,ITERATIONS+1):
+        entropy_sum = 0
+        for node in G.node.items():
+            entropy_sum += node[1]['entropy'][i]
+        ave_entropy.append(entropy_sum/NODE_COUNT)
+        if i > 0:
+            print(ave_entropy[i]*100 , infection_array[i]*100)
+            
+    plt.figure(figsize=(16,6))  
+    plt.axis([0,ITERATIONS, 0.1, 0.9])
+    plt.plot(list(range(ITERATIONS+1)), infection_array)
+    plt.show()
+    
+    plt.figure(figsize=(16,6))
+    plt.plot(list(range(ITERATIONS+1)), ave_entropy)
+    plt.show()
+     
+def multiple_simulations():
     ##### Scenario 1: black: gradient, red: uniform
     network_initial_condition = {
         'node_count': NODE_COUNT,
@@ -24,10 +118,9 @@ def main():
         'red_budget': 50,
         'black_budget': 50,
         'red_strat': 'uniform',
-        'black_strat': 'heuristic',
+        'black_strat': 'gradient',
         'dist': 'equal',
-        'type': 'barabasi',
-        'heuristic_param': ['centrality', 'degree', 'infection']
+        'type': 'barabasi'
     }
 
     infection_rate_1 = run_multiple_simulations(network_initial_condition)
@@ -46,7 +139,7 @@ def main():
         'type': 'barabasi'
     }
 
-    # infection_rate_2 = run_multiple_simulations(network_initial_condition)
+    infection_rate_2 = run_multiple_simulations(network_initial_condition)
 
 
     #### Scenario 3: black: uniform, red: gradient
@@ -63,17 +156,17 @@ def main():
         'type': 'barabasi'
     }
 
-    # infection_rate_3 = run_multiple_simulations(network_initial_condition)
+    infection_rate_3 = run_multiple_simulations(network_initial_condition)
 
     plt.plot(list(range(ITERATIONS)), infection_rate_1)
-    # plt.plot(list(range(ITERATIONS)), infection_rate_2)
-    # plt.plot(list(range(ITERATIONS)), infection_rate_3)
+    plt.plot(list(range(ITERATIONS)), infection_rate_2)
+    plt.plot(list(range(ITERATIONS)), infection_rate_3)
     plt.legend(['r, b*', 'r*, b*', 'r*, b'], loc='upper left')
     # plt.legend(['r: heuristic, b: gradient descent'], loc='upper left')
 
-    plt.axis([0,ITERATIONS, 0.2, 0.7])
+    plt.axis([0,ITERATIONS, 0.1, 0.9])
     plt.show()
-
+    
 def run_multiple_simulations(network_initial_condition):
 
     arrays_of_infection_rate = []
@@ -90,7 +183,6 @@ def run_multiple_simulations(network_initial_condition):
         average = sum / len(arrays_of_infection_rate)
         average_infection_rate_overtime.append(average)
 
-    # print(average_infection_rate_overtime)
     return average_infection_rate_overtime
 
 def simulate_network_infection(network_initial_condition):
@@ -98,35 +190,26 @@ def simulate_network_infection(network_initial_condition):
     G = network.create_network()
     set_positions(G)
     infection_array = []
-    # pylab.show()
-    # pylab.ion()
-    # fig = plt.figure(figsize=(16, 6))
     for node in G.node.items():
         network.construct_super_urn(node)
     for i in range(0, ITERATIONS):
         run_time_step(G, network, infection_array)
-        # update_fig(G, fig, infection_array)
-        # pylab.ioff()
-
-    # update_fig(G, fig, infection_array)
-    # plt.show()
-    # print(infection_array)
-    print('------------------------------------------')
     return infection_array
 
 
 def run_time_step(G, network, infection_array):
     current_conditions = {}
     network_infection_sum = 0
-    # total_balls = 0
 
     network.run_time_step()
     for node in G.node.items():
         draw = draw_from_superurn(network, node)
         current_conditions[node[0]] = draw
         add_balls_to_node(G, network, node[0])
+        network.construct_super_urn(node)
         network_infection_sum += node[1]['super_urn']['network_infection']
-
+    
+    network.record_entropy()
     average_infection = network_infection_sum / NODE_COUNT
     infection_array.append(average_infection)
 
@@ -143,7 +226,6 @@ def add_balls_to_node(G, network, node_index):
     elif (G.node[node_index]['prev_draw'] == 0):
         G.node[node_index]['urns']['black'] += network.black_dist[node_index]
 
-
 def find_condition(super_urn):
     red = super_urn['red']
     black = super_urn['black']
@@ -156,14 +238,14 @@ def update_fig(G, fig, infection_array):
     ax0 = fig.add_subplot(gs[:, :7])
     ax1 = fig.add_subplot(gs[:, 9:])
     color_map = infection_rate_to_color(G)
-    nx.draw(G, nx.get_node_attributes(G, 'pos'), ax0, node_color=color_map, linewidths=1, edgecolors='black',
-                     cmap=plt.cm.RdGy)
-
+    nx.draw_networkx(G, nx.get_node_attributes(G, 'pos'), ax0, node_color=color_map, linewidths=1, edgecolors='black',
+                     cmap=plt.cm.RdGy, alpha = 0.5, labels = nx.get_node_attributes(G, 'label'))
+    
     ax1.plot(list(range(len(infection_array))), infection_array, color='green', marker='o', markersize=1)
     ax1.set_ylabel('Average Network Infection Rate')
     ax1.set_xlabel('Time')
     ax1.set_xlim([0, ITERATIONS])
-    ax1.set_ylim([0.2, 0.6])
+    ax1.set_ylim([0.1, 0.9])
     pylab.draw()
     pause(0.001)
 
@@ -172,22 +254,15 @@ def set_positions(G):
     pos = nx.spring_layout(G)
     for n, p in pos.items():
         G.node[n]['pos'] = p
+    for node in G.node.items():
+        node[1]['label'] = node[0]
 
 
 def infection_rate_to_color(G):
     color_map = []
     for node in G.node.items():
         infection_rate = node[1]['super_urn']['network_infection']
-        color_map.append(1-infection_rate)
-    return color_map
-
-def set_color(G):
-    color_map = []
-    for node in G.node.items():
-        if node[1]['prev_draw'] == 1:
-            color_map.append('red')
-        else:
-            color_map.append('black')
+        color_map.append(1 - infection_rate)
     return color_map
 
 
