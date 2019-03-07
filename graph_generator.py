@@ -16,16 +16,15 @@ def main():
     budget = node_count * 10
     initial_condition = {
         'node_count': node_count,
-        'edges': 2,
+        'parameter': 2,
         'red': initial_balls,
         'black': initial_balls,
         'red_budget': budget,
         'black_budget': budget,
         'red_strat': 'uniform',
-        'black_strat': 'heuristic',
+        'black_strat': 'centrality',
         'dist': 'random',
         'type': 'barabasi',
-        'heuristic_param': ['centrality', 'degree', 'infection']
     }
 
     network = NetWorkHelper(initial_condition)
@@ -39,7 +38,7 @@ def main():
     draw_graph(G)
     plt.axis('off')
     plt.suptitle('Facebook Post Network', fontsize=20)
-    plt.title('Number of nodes: 30013635, Number of edges: 2425, Average degree:  3.5583', fontsize=12)
+    plt.title('Number of nodes: 1363, Number of edges: 2425, Average degree:  3.5583', fontsize=12)
     plt.show()
 
 

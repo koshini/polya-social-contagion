@@ -33,7 +33,7 @@ class NetWorkHelper():
             # Generate a barabasi albert graph with node_count nodes
             # Setting the second parameter to 1 means each node added will only have one edge to begin
             if self.type == 'barabasi':
-                G = nx.barabasi_albert_graph(self.node_count, self.edges)
+                G = nx.barabasi_albert_graph(self.node_count, self.parameter)
             elif self.type == 'path':
                 G = nx.path_graph(self.node_count)
         # Initializes urn dictionary
