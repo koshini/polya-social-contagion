@@ -79,7 +79,7 @@ def get_second_friends():
     f.close()
 
 def write_edgelist(follower, followed):
-    f = open('data/data.edgelist', 'a')
+    f = open('data/twitter.edgelist', 'a')
     f.write("%s %s\n" % (follower, followed))
     f.close()
 
