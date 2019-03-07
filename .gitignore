@@ -105,5 +105,8 @@ venv.bak/
 
 # PyCharm config files
 .idea/
+.DS_Store
 
-.DS_store/
+# Twitter OAuth
+oauth.json
+
