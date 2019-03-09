@@ -14,10 +14,8 @@ import csv
 
 class RegressionModel():
     def __init__(self):
-        [model, position, centrality_ratio] = self.run_regression()
+        model = self.run_regression()
         self.model = model
-        self.position = position
-        self.centrality_ratio = centrality_ratio
         
     def run_regression(self):
         ## Read data
@@ -27,54 +25,60 @@ class RegressionModel():
             node_position = []
             node_degree = []
             node_centrality = []
+            node_centrality_ratio = []
             node_infection = []
             ball_dist = []
             for row in csv_reader:
                 if line_count == 0:
-                    node_position = list(map(int,row))
+                    node_position = list(map(float,row))
                 if line_count == 1:
-                    node_degree = list(map(int,row))
+                    node_degree = list(map(float,row))
                 if line_count == 2:
                     node_centrality = list(map(float,row))
                 if line_count % 2 == 1 and line_count > 2:
                     node_infection.append(list(map(float,row)))
+                    ratio = np.multiply(np.array(node_infection[-1]), np.array(node_centrality), np.array(node_degree))
+                    ratio = ratio / sum(ratio)
+                    node_centrality_ratio.append(list(ratio))
+                    
                 if line_count % 2 ==0 and line_count > 2:
-                    ball_dist.append(list(map(int,row)))
+                    ball_dist.append(list(map(float,row)))
                 line_count += 1
         
+        centrality_dict = {}
+        samples = len(node_centrality_ratio)
+        nodes = len(node_centrality_ratio[0])
         
-        centrality_ratio = []
-        total_degree = sum(node_degree)
-        total_centrality = sum(node_centrality)
-        
-        for i in range(0, len(node_degree)):
-            centrality_ratio.append((node_degree[0]*node_centrality[0])/(total_degree*total_centrality))
-        
-        infection_train, infection_test, y_infection_train, y_infection_test = train_test_split( node_infection, ball_dist, test_size = 0.3, random_state = 100)
-        infection = DecisionTreeClassifier(criterion = "gini", splitter = 'random', random_state = 100, max_depth = 20)
-        
-        
-        infection.fit(infection_train, y_infection_train)
-        y1_train = infection.predict(infection_train)
-        y1 = infection.predict(infection_test)
-        
-        ## Testing
-        y_pred_train = []
-        for i in range(0,len(y1_train)):  
-            budget = sum(y1_train[i])
-            dist = np.array(centrality_ratio) * np.array(y1_train[i])
-            dist = dist / sum(dist)
-            dist = budget * dist
-            y_pred_train.append(np.around(dist.copy()))
+        for i in range(0, samples):
+            for j in range(0, nodes):
+                centrality_dict[j] = node_centrality_ratio[j]
+            sorted_by_value = sorted(centrality_dict.items(), key=lambda kv: kv[1])
+            node_pos = [x[0] for x in sorted_by_value]
+            node_inf = [x[1] for x in sorted_by_value]
+            node_infection[i] = node_inf
             
             
-        y_pred = []
-        for i in range(0,len(y1)):    
-            budget = sum(y1[i])
-            dist = np.array(centrality_ratio) * np.array(y1[i])
-            dist = dist / sum(dist)
-            dist = budget * dist
-            y_pred.append(np.around(dist.copy()))
+            new_dist = np.zeros(len(ball_dist[i]))
+            for j in range(0, nodes):
+                new_dist[j] = ball_dist[i][node_pos[j]]
+                
+        #print(sorted_by_value)    
+        #print(ball_dist[i])
+            
+        #infection_train, infection_test, y_infection_train, y_infection_test = train_test_split( node_infection, ball_dist, test_size = 0.3, random_state = 100)
+        #infection = DecisionTreeClassifier(criterion = "gini", splitter = 'random', random_state = 100, max_depth = 20)
+        
+        centrality_train, centrality_test, y_centrality_train, y_centrality_test = train_test_split( node_centrality_ratio, ball_dist, test_size = 0.3, random_state = 100)
+        centrality = DecisionTreeClassifier(criterion = "gini", splitter = 'random', random_state = 100)
+        
+        #infection.fit(infection_train, y_infection_train)
+        #y1_train = infection.predict(infection_train)
+        #y1 = infection.predict(infection_test)
+        
+        centrality.fit(centrality_train, y_centrality_train)
+        y1_train = centrality.predict(centrality_train)
+        y1 = centrality.predict(centrality_test)
+        
         
         #flat_y_pred = [item for sublist in y_pred for item in sublist]
         #flat_y1 = [item for sublist in y1 for item in sublist]
@@ -84,17 +88,31 @@ class RegressionModel():
         #flat_y1_train = [item for sublist in y1_train for item in sublist]
         #flat_train = [item for sublist in y_infection_train for item in sublist]
     
-        return [infection, np.array(node_position), np.array(centrality_ratio)]
+        return centrality
     
-    def output_dist(self, network_infection, budget):
-        network_infection = np.array(network_infection).reshape(1,-1)
-        prediction = self.model.predict(network_infection)
+    def output_dist(self, network_infection, centrality_array, budget):
+        #network_infection = np.array(network_infection).reshape(1,-1)
+        centrality = centrality_array * np.array(network_infection[0])
+        centrality = centrality / sum(centrality)
         
+        centrality_dict = {}
+        for j in range(0, len(network_infection)):
+            centrality_dict[j] = centrality[j]
+        sorted_by_value = sorted(centrality_dict.items(), key=lambda kv: kv[1])
+        node_pos = [x[0] for x in sorted_by_value]
+        node_inf = [x[1] for x in sorted_by_value]
+        centrality = node_inf
         
-        pred_budget = sum(prediction[0])
-        dist = self.centrality_ratio * np.array(prediction[0])
-        dist = dist / sum(dist)
-        dist = (pred_budget * dist) * (budget/pred_budget)
+        centrality = np.array(centrality).reshape(1,-1)
+        prediction = self.model.predict(centrality)[0]
+        pred_budget = sum(prediction)
+        
+        dist = np.zeros(len(node_pos))
+        
+        for i in range(0, len(node_pos)):
+            dist[node_pos[i]] = prediction[i]
+            
+        dist = prediction * (budget/pred_budget)
         
         #where_are_NaNs = np.isnan(dist)
         #dist[where_are_NaNs] = 0
