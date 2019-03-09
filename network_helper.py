@@ -326,17 +326,17 @@ class NetWorkHelper():
         return curing_dist
         
     def entropy(self):
-        infection_array = np.array(list(nx.get_node_attributes(self.G,'network_infection').values())) - 0.5
+        infection_array = np.array(list(nx.get_node_attributes(self.G,'network_infection').values()))
         
         for i in range(0, len(infection_array)):
-            if infection_array[i] < 0:
+            if infection_array[i] < 0.4:
                 infection_array[i] = 0
         #If all nodes less than 50% infected uniformly distribute budget
         if(sum(infection_array) == 0):
             return self.equally_divide(self.black_budget)
         
         infection_array = infection_array / sum(infection_array)
-        dist = infection_array * (self.black_budget)
+        dist = list(np.around(infection_array * (self.black_budget)))
 
         return dist  
     
@@ -347,12 +347,12 @@ class NetWorkHelper():
 
             for i in range(0, len(adj_infection_array)):
                 if adj_infection_array[i] < 0.4:
-                    adj_infection_array[i] = 0
+                    adj_infection_array[i] = 0.05
             #If all nodes less than 60% infected uniformly distribute budget                    
             if(sum(adj_infection_array) == 0):
                 return self.equally_divide(self.black_budget)  
                 
             adj_infection_array = np.multiply(adj_infection_array, centrality_mult_array) / sum(np.multiply(adj_infection_array,centrality_mult_array))
-            dist = adj_infection_array * (self.black_budget)
+            dist = list(np.around(adj_infection_array * (self.black_budget)))
     
             return dist        
