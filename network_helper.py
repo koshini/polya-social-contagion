@@ -36,8 +36,8 @@ class NetWorkHelper():
         # TODO: Add more distribtutions
         if initial_condition['dist'] == 'random':
             # Creates random distribution of starting red and black balls between all nodes
-            red_dist = self.constrained_sum_sample_pos(initial_condition['red'])
-            black_dist = self.constrained_sum_sample_pos(initial_condition['black'])
+            red_dist = self.constrained_sample_sum_pos(initial_condition['red'])
+            black_dist = self.constrained_sample_sum_pos(initial_condition['black'])
 
         elif initial_condition['dist'] == 'equal':
             red_dist = self.equally_divide(initial_condition['red'])
@@ -117,7 +117,7 @@ class NetWorkHelper():
             return [int(i) for i in dist]
 
 
-    def constrained_sum_sample_pos(self, total):
+    def constrained_sample_sum_pos(self, total):
         """Return a randomly chosen list of n positive integers summing to total.
         Each such list is equally likely to occur."""
         dividers = sorted(random.sample(range(1, total), self.node_count - 1))

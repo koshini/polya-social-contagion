@@ -13,6 +13,7 @@ import csv
 NODE_COUNT = 100 
 ITERATIONS = 500
 RUNS = 5 # run the same strategy 10 times to get a smooth curve
+PARAMETER = 2 # barabasi parameter
 
 def main():
     ##### Scenario 1: black: gradient, red: uniform
@@ -22,21 +23,23 @@ def main():
 def single_simulation():
     ##### Scenario 1: black: gradient, red: uniform
     network_initial_condition = {
-        'node_count': NODE_COUNT,
-        'parameter': 3,
         'red': 5000,
         'black': 5000,
+        'dist': 'random',
+    }
+
+    strat_dict = {
         'red_budget': 500,
         'black_budget': 500,
         'red_strat': 'gradient',
         'black_strat': 'centrality',
-        'dist': 'random',
-        'type': 'barabasi'
     }
-    
-    network = NetWorkHelper(network_initial_condition)
 
-    G = network.create_network()
+    G = nx.barabasi_albert_graph(NODE_COUNT, PARAMETER)
+    network = NetWorkHelper(strat_dict, G)
+
+    G = network.create_network(network_initial_condition)
+    network.set_centrality_mult()
     set_positions(G)
     pylab.show()
     pylab.ion()
@@ -106,61 +109,62 @@ def single_simulation():
     #plt.show()
      
 def multiple_simulations():
-    ##### Scenario 1: black: gradient, red: uniform
+    ##### Scenario 1
     labels = []
     network_initial_condition = {
-        'node_count': NODE_COUNT,
-        'parameter': 2,
         'red': 50000,
         'black': 50000,
+        'dist': 'random',
+    }
+
+    strat_dict = {
         'red_budget': 5000,
         'black_budget': 5000,
         'red_strat': 'uniform',
         'black_strat': 'entropy',
-        'dist': 'random',
-        'type': 'barabasi'
     }
-    labels.append(network_initial_condition['red_strat'])
-    labels.append(network_initial_condition['black_strat'])
+    labels.append(strat_dict['red_strat'])
+    labels.append(strat_dict['black_strat'])
 
-    infection_rate_1 = run_multiple_simulations(network_initial_condition)
+    infection_rate_1 = run_multiple_simulations(network_initial_condition, strat_dict)
 
-    ### Scenario 2:both gradient
+    ### Scenario 2
     network_initial_condition = {
-        'node_count': NODE_COUNT,
-        'parameter': 2,
         'red': 50000,
         'black': 50000,
+        'dist': 'random',
+    }
+
+    strat_dict = {
         'red_budget': 5000,
         'black_budget': 5000,
         'red_strat': 'uniform',
         'black_strat': 'centrality_entropy',
-        'dist': 'random',
-        'type': 'barabasi'
     }
-    labels.append(network_initial_condition['red_strat'])
-    labels.append(network_initial_condition['black_strat'])
+    labels.append(strat_dict['red_strat'])
+    labels.append(strat_dict['black_strat'])
     
-    infection_rate_2 = run_multiple_simulations(network_initial_condition)
+    infection_rate_2 = run_multiple_simulations(network_initial_condition, strat_dict)
 
 
-    #### Scenario 3: black: uniform, red: gradient
+    #### Scenario 3
     network_initial_condition = {
-        'node_count': NODE_COUNT,
-        'parameter': 2,
         'red': 50000,
         'black': 50000,
+        'dist': 'random',
+    }
+
+    strat_dict = {
         'red_budget': 5000,
         'black_budget': 5000,
         'red_strat': 'uniform',
         'black_strat': 'centrality',
-        'dist': 'random',
-        'type': 'barabasi'
     }
-    labels.append(network_initial_condition['red_strat'])
-    labels.append(network_initial_condition['black_strat'])
+
+    labels.append(strat_dict['red_strat'])
+    labels.append(strat_dict['black_strat'])
     
-    infection_rate_3 = run_multiple_simulations(network_initial_condition)
+    infection_rate_3 = run_multiple_simulations(network_initial_condition, strat_dict)
 
     plt.plot(list(range(ITERATIONS)), infection_rate_1, label = 'red: ' + labels[0] + ', black: ' + labels[1])
     plt.plot(list(range(ITERATIONS)), infection_rate_2, label = 'red: ' + labels[2] + ', black: ' + labels[3])
@@ -171,11 +175,11 @@ def multiple_simulations():
     plt.axis([0,ITERATIONS, 0.1, 0.9])
     plt.show()
     
-def run_multiple_simulations(network_initial_condition):
+def run_multiple_simulations(network_initial_condition, strat_dict):
     arrays_of_infection_rate = []
     for i in range(RUNS):
         print(i)
-        infection_array = simulate_network_infection(network_initial_condition)
+        infection_array = simulate_network_infection(network_initial_condition, strat_dict)
         arrays_of_infection_rate.append(infection_array)
 
     average_infection_rate_overtime = []
@@ -188,9 +192,12 @@ def run_multiple_simulations(network_initial_condition):
 
     return average_infection_rate_overtime
 
-def simulate_network_infection(network_initial_condition):
-    network = NetWorkHelper(network_initial_condition)
-    G = network.create_network()
+def simulate_network_infection(network_initial_condition, strat_dict):
+    G = nx.barabasi_albert_graph(NODE_COUNT, PARAMETER)
+    network = NetWorkHelper(strat_dict, G)
+    network.create_network(network_initial_condition)
+    network.set_centrality_mult()
+    G = network.G
     set_positions(G)
     infection_array = []
     for node in G.node.items():
