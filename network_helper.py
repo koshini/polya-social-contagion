@@ -48,8 +48,10 @@ class NetWorkHelper():
             black_dist = self.equally_divide(self.black)
 
         # Add distributions to urn
-        for i in range(0, self.node_count):
-            urns[i] = {'red': red_dist[i], 'black': black_dist[i]}
+        i = 0
+        for key in G.nodes.keys():
+            urns[key] = {'red': red_dist[i], 'black': black_dist[i]}
+            i += 1
 
         # Adds unique urn to each node in network
         nx.set_node_attributes(G, name="urns", values=urns)

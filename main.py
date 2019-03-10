@@ -172,7 +172,6 @@ def multiple_simulations():
     plt.show()
     
 def run_multiple_simulations(network_initial_condition):
-
     arrays_of_infection_rate = []
     for i in range(RUNS):
         print(i)
