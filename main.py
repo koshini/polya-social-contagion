@@ -10,25 +10,25 @@ from matplotlib.pyplot import pause
 from network_helper import NetWorkHelper
 import csv
 
-NODE_COUNT = 100
-ITERATIONS = 100
-RUNS = 30 # run the same strategy 10 times to get a smooth curve
+NODE_COUNT = 100 
+ITERATIONS = 500
+RUNS = 5 # run the same strategy 10 times to get a smooth curve
 
 def main():
     ##### Scenario 1: black: gradient, red: uniform
-    #multiple_simulations()
-    single_simulation()
+    multiple_simulations()
+    #single_simulation()
 
 def single_simulation():
     ##### Scenario 1: black: gradient, red: uniform
     network_initial_condition = {
         'node_count': NODE_COUNT,
-        'parameter': 2,
+        'parameter': 3,
         'red': 5000,
         'black': 5000,
-        'red_budget': 1000,
-        'black_budget': 1000,
-        'red_strat': 'uniform',
+        'red_budget': 500,
+        'black_budget': 500,
+        'red_strat': 'gradient',
         'black_strat': 'centrality',
         'dist': 'random',
         'type': 'barabasi'
@@ -40,8 +40,8 @@ def single_simulation():
     set_positions(G)
     pylab.show()
     pylab.ion()
-    fig = plt.figure(figsize=(16,6))
-    plt.axis([0,ITERATIONS, 0.1, 0.9])
+    #fig = plt.figure(figsize=(16,6))
+    #plt.axis([0,ITERATIONS, 0.1, 0.9])
     network_infection_sum = 0
     
     infection_array = []
@@ -79,89 +79,93 @@ def single_simulation():
             #pylab.ioff()
             
         #plt.show()
-     
     
     ave_entropy = []
+    entropy_sums = []
     for i in range (0,ITERATIONS+1):
         entropy_sum = 0
         for node in G.node.items():
-            entropy_sum += node[1]['entropy'][i]
+            entropy_sum += node[1]['centrality_multiplier'] * node[1]['entropy'][i]
         ave_entropy.append(entropy_sum/NODE_COUNT)
+        entropy_sums.append(entropy_sum)
         if i > 0:
-            print(ave_entropy[i]*100 , infection_array[i]*100)
-    
-    ave_entropy = []
-    for i in range (0,ITERATIONS+1):
-        entropy_sum = 0
-        for node in G.node.items():
-            entropy_sum += node[1]['entropy'][i]
-        ave_entropy.append(entropy_sum/NODE_COUNT)
-        if i > 0:
-            print(ave_entropy[i]*100 , infection_array[i]*100)
+            continue
+            #print(ave_entropy[i]*100 , infection_array[i]*100)
             
     plt.figure(figsize=(16,6))  
     plt.axis([0,ITERATIONS, 0.1, 0.9])
     plt.plot(list(range(ITERATIONS+1)), infection_array)
     plt.show()
     
-    plt.figure(figsize=(16,6))
-    plt.plot(list(range(ITERATIONS+1)), ave_entropy)
-    plt.show()
+    #plt.figure(figsize=(16,6))
+    #plt.plot(list(range(ITERATIONS+1)), ave_entropy)
+    #plt.show()
+    
+    #plt.figure(figsize=(16,6))
+    #plt.plot(list(range(ITERATIONS+1)), entropy_sums)
+    #plt.show()
      
 def multiple_simulations():
     ##### Scenario 1: black: gradient, red: uniform
+    labels = []
     network_initial_condition = {
         'node_count': NODE_COUNT,
-        'edges': 2,
-        'red': 500,
-        'black': 500,
-        'red_budget': 50,
-        'black_budget': 50,
+        'parameter': 2,
+        'red': 50000,
+        'black': 50000,
+        'red_budget': 5000,
+        'black_budget': 5000,
         'red_strat': 'uniform',
-        'black_strat': 'gradient',
-        'dist': 'equal',
+        'black_strat': 'entropy',
+        'dist': 'random',
         'type': 'barabasi'
     }
+    labels.append(network_initial_condition['red_strat'])
+    labels.append(network_initial_condition['black_strat'])
 
     infection_rate_1 = run_multiple_simulations(network_initial_condition)
 
     ### Scenario 2:both gradient
     network_initial_condition = {
         'node_count': NODE_COUNT,
-        'edges': 2,
-        'red': 500,
-        'black': 500,
-        'red_budget': 50,
-        'black_budget': 50,
-        'red_strat': 'gradient',
-        'black_strat': 'gradient',
-        'dist': 'equal',
+        'parameter': 2,
+        'red': 50000,
+        'black': 50000,
+        'red_budget': 5000,
+        'black_budget': 5000,
+        'red_strat': 'uniform',
+        'black_strat': 'centrality_entropy',
+        'dist': 'random',
         'type': 'barabasi'
     }
-
+    labels.append(network_initial_condition['red_strat'])
+    labels.append(network_initial_condition['black_strat'])
+    
     infection_rate_2 = run_multiple_simulations(network_initial_condition)
 
 
     #### Scenario 3: black: uniform, red: gradient
     network_initial_condition = {
         'node_count': NODE_COUNT,
-        'edges': 2,
-        'red': 500,
-        'black': 500,
-        'red_budget': 50,
-        'black_budget': 50,
-        'red_strat': 'gradient',
-        'black_strat': 'uniform',
-        'dist': 'equal',
+        'parameter': 2,
+        'red': 50000,
+        'black': 50000,
+        'red_budget': 5000,
+        'black_budget': 5000,
+        'red_strat': 'uniform',
+        'black_strat': 'centrality',
+        'dist': 'random',
         'type': 'barabasi'
     }
-
+    labels.append(network_initial_condition['red_strat'])
+    labels.append(network_initial_condition['black_strat'])
+    
     infection_rate_3 = run_multiple_simulations(network_initial_condition)
 
-    plt.plot(list(range(ITERATIONS)), infection_rate_1)
-    plt.plot(list(range(ITERATIONS)), infection_rate_2)
-    plt.plot(list(range(ITERATIONS)), infection_rate_3)
-    plt.legend(['r, b*', 'r*, b*', 'r*, b'], loc='upper left')
+    plt.plot(list(range(ITERATIONS)), infection_rate_1, label = 'red: ' + labels[0] + ', black: ' + labels[1])
+    plt.plot(list(range(ITERATIONS)), infection_rate_2, label = 'red: ' + labels[2] + ', black: ' + labels[3])
+    plt.plot(list(range(ITERATIONS)), infection_rate_3, label = 'red: ' + labels[4] + ', black: ' + labels[5])
+    plt.legend(loc='upper left')
     # plt.legend(['r: heuristic, b: gradient descent'], loc='upper left')
 
     plt.axis([0,ITERATIONS, 0.1, 0.9])

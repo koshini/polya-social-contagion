@@ -25,17 +25,13 @@ class NetWorkHelper():
         self.regression_model = RegressionModel()
 
     # TODO: Add distribution of red/black balls in network toggle
-    def create_network(self, G=None):
-        # if no graph is provided, we simulate one
-        #####
-        # G=None
-        if not G:
-            # Generate a barabasi albert graph with node_count nodes
-            # Setting the second parameter to 1 means each node added will only have one edge to begin
-            if self.type == 'barabasi':
-                G = nx.barabasi_albert_graph(self.node_count, self.parameter)
-            elif self.type == 'path':
-                G = nx.path_graph(self.node_count)
+    def create_network(self):
+        # Generate a barabasi albert graph with node_count nodes
+        # Setting the second parameter to 1 means each node added will only have one edge to begin
+        if self.type == 'barabasi':
+            G = nx.barabasi_albert_graph(self.node_count, self.parameter)
+        elif self.type == 'path':
+            G = nx.path_graph(self.node_count)
         # Initializes urn dictionary
         urns = {}
         prev_exposure = []
@@ -75,11 +71,6 @@ class NetWorkHelper():
         #Set initial exposure rate
         self.G = G
         self.set_prev_exposure()
-
-        # construct superurn
-        for node in G.node.items():
-            self.construct_super_urn(node)
-            
         self.set_centrality_mult()
         return self.G
 
@@ -94,6 +85,12 @@ class NetWorkHelper():
             curing_dist = self.black_centrality_ratio_strat()
         if self.black_strat == 'regression':
             curing_dist = self.run_regression()
+        if self.black_strat == 'follow_bot':
+            curing_dist = self.follow_bot()
+        if self.black_strat == 'entropy':
+            curing_dist = self.entropy()
+        if self.black_strat == 'centrality_entropy':
+            curing_dist = self.centrality_entropy()
         #print('Black dist:', self.black_dist)
 
         if self.red_strat == 'uniform':
@@ -157,7 +154,8 @@ class NetWorkHelper():
     
     def record_entropy(self):
         for index, node in self.G.node.items():
-            p = node['network_infection']
+            p = 1 - node['network_infection']
+            #node['entropy'].append(-p*math.log(p))
             node['entropy'].append(-p*math.log(p)-(1-p)*math.log(1-p))
         
     def find_superurn_exp_red(self, infecting_strat = None):
@@ -296,7 +294,7 @@ class NetWorkHelper():
         return list(curing_dist)
 
     def red_centrality_ratio_strat(self):
-        infection_array = np.array(list(nx.get_node_attributes(self.G,'network_infection').values()))
+        infection_array = 1 - np.array(list(nx.get_node_attributes(self.G,'network_infection').values()))
         centrality_mult_array = np.array(list(nx.get_node_attributes(self.G,'centrality_multiplier').values()))
         infecting_dist = np.multiply(infection_array, centrality_mult_array)
         infecting_dist = infecting_dist / sum(infecting_dist)
@@ -317,10 +315,46 @@ class NetWorkHelper():
         
     def run_regression(self):
         infection_array = []
+        centrality_array = []
         for index, node in self.G.node.items():
             infection_array.append(node['super_urn']['network_infection'])
-        curing_dist = list(self.regression_model.output_dist(infection_array, self.black_budget))
+            centrality_array.append(node['centrality_multiplier'])
+        curing_dist = list(self.regression_model.output_dist(infection_array, centrality_array, self.black_budget))
         return curing_dist
+    
+    def follow_bot(self):
+        curing_dist = np.array(self.red_dist)
+        curing_dist = curing_dist * (self.black_budget / self.red_budget)
+        return curing_dist
+        
+    def entropy(self):
+        infection_array = np.array(list(nx.get_node_attributes(self.G,'network_infection').values()))
+        
+        for i in range(0, len(infection_array)):
+            if infection_array[i] < 0.4:
+                infection_array[i] = 0
+        #If all nodes less than 50% infected uniformly distribute budget
+        if(sum(infection_array) == 0):
+            return self.equally_divide(self.black_budget)
+        
+        infection_array = infection_array / sum(infection_array)
+        dist = list(np.around(infection_array * (self.black_budget)))
 
-        
-        
+        return dist  
+    
+    def centrality_entropy(self):
+            infection_array = np.array(list(nx.get_node_attributes(self.G,'network_infection').values()))
+            adj_infection_array = infection_array
+            centrality_mult_array = np.array(list(nx.get_node_attributes(self.G,'centrality_multiplier').values()))
+
+            for i in range(0, len(adj_infection_array)):
+                if adj_infection_array[i] < 0.4:
+                    adj_infection_array[i] = 0.05
+            #If all nodes less than 60% infected uniformly distribute budget                    
+            if(sum(adj_infection_array) == 0):
+                return self.equally_divide(self.black_budget)  
+                
+            adj_infection_array = np.multiply(adj_infection_array, centrality_mult_array) / sum(np.multiply(adj_infection_array,centrality_mult_array))
+            dist = list(np.around(adj_infection_array * (self.black_budget)))
+    
+            return dist        
