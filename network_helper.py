@@ -1,4 +1,5 @@
 import networkx as nx
+import json
 import random
 import numpy as np
 import copy
@@ -8,44 +9,39 @@ from regression import RegressionModel
 
 
 class NetWorkHelper():
-    def __init__(self, initial_condition):
-        self.node_count = initial_condition['node_count']
-        self.parameter = initial_condition['parameter']
-        self.dist = initial_condition['dist']
-        self.red = initial_condition['red']
-        self.black = initial_condition['black']
-        self.red_budget = initial_condition['red_budget']
-        self.black_budget = initial_condition['black_budget']
+    def __init__(self, strat_dict, G):
+        self.node_count = nx.number_of_nodes(G)
+        # self.parameter = initial_condition['parameter']
+        # self.dist = initial_condition['dist']
+        # self.red = initial_condition['red']
+        # self.black = initial_condition['black']
+        self.red_budget = strat_dict['red_budget']
+        self.black_budget = strat_dict['black_budget']
         self.red_dist = self.node_count * [0]
         self.black_dist = self.node_count * [0]
-        self.red_strat = initial_condition['red_strat']
-        self.black_strat = initial_condition['black_strat']
-        self.type = initial_condition['type']
-        self.G = None
+        self.red_strat = strat_dict['red_strat']
+        self.black_strat = strat_dict['black_strat']
+        # self.type = initial_condition['type']
+        self.G = G
         self.regression_model = RegressionModel()
 
     # TODO: Add distribution of red/black balls in network toggle
-    def create_network(self):
-        # Generate a barabasi albert graph with node_count nodes
-        # Setting the second parameter to 1 means each node added will only have one edge to begin
-        if self.type == 'barabasi':
-            G = nx.barabasi_albert_graph(self.node_count, self.parameter)
-        elif self.type == 'path':
-            G = nx.path_graph(self.node_count)
+    def create_network(self, initial_condition):
+        G = self.G
         # Initializes urn dictionary
         urns = {}
         prev_exposure = []
 
         # Set initial condition of urn
         # TODO: Add more distribtutions
-        if self.dist == 'random':
+        if initial_condition['dist'] == 'random':
             # Creates random distribution of starting red and black balls between all nodes
-            red_dist = self.constrained_sum_sample_pos(self.red)
-            black_dist = self.constrained_sum_sample_pos(self.black)
+            red_dist = self.constrained_sum_sample_pos(initial_condition['red'])
+            black_dist = self.constrained_sum_sample_pos(initial_condition['black'])
 
-        elif self.dist == 'equal':
-            red_dist = self.equally_divide(self.red)
-            black_dist = self.equally_divide(self.black)
+        elif initial_condition['dist'] == 'equal':
+            red_dist = self.equally_divide(initial_condition['red'])
+            black_dist = self.equally_divide(initial_condition['black'])
 
         # Add distributions to urn
         i = 0
@@ -57,21 +53,27 @@ class NetWorkHelper():
         nx.set_node_attributes(G, name="urns", values=urns)
         nx.set_node_attributes(G, name="prev_draw", values=-1)
         nx.set_node_attributes(G, name="prev_exposure", values=prev_exposure) # not being used
-        nx.set_node_attributes(G, name="prev_deltar", values=0)
-        nx.set_node_attributes(G, name="prev_deltab", values=0)
+        # nx.set_node_attributes(G, name="prev_deltar", values=0)
+        # nx.set_node_attributes(G, name="prev_deltab", values=0)
         nx.set_node_attributes(G, name="entropy", values=[])
         
-        #Set the intitial budget distributions
-        G.node[0]['prev_deltar'] = self.red_budget
-        G.node[0]['prev_deltab'] = self.black_budget
-                
-        self.black_dist = self.equally_divide(self.black_budget)
-        self.red_dist = self.equally_divide(self.red_budget)
+        # #Set the intitial budget distributions
+        # G.node[0]['prev_deltar'] = self.red_budget
+        # G.node[0]['prev_deltab'] = self.black_budget
+
+        # self.black_dist = self.equally_divide(self.black_budget)
+        # self.red_dist = self.equally_divide(self.red_budget)
         
         #Set initial exposure rate
         self.G = G
         self.set_prev_exposure()
-        self.set_centrality_mult()
+
+        # construct superurn
+        for node in G.node.items():
+            self.construct_super_urn(node)
+
+        # Call this function outside of create_network because it takes a long time for large networks
+        # self.set_centrality_mult()
         return self.G
 
     def run_time_step(self):
@@ -301,13 +303,20 @@ class NetWorkHelper():
         infecting_dist = np.around(infecting_dist * self.red_budget)        
         return list(infecting_dist)
     
-    def set_centrality_mult(self):
-        closeness_centrality_dict = nx.closeness_centrality(self.G)
+    def set_centrality_mult(self, filepath=None):
+        if not filepath:
+            closeness_centrality_dict = nx.closeness_centrality(self.G)
+        else: # closeness_centrality_dict is previously computed and stored in a JSON file
+            f = open(filepath, 'r').read()
+            closeness_centrality_dict = json.loads(f)
+
         for index, node in self.G.node.items():
             degree = self.G.degree(index)
             closeness_centrality = closeness_centrality_dict[index]
+            # closeness_centrality = closeness_centrality_dict[str(index)] # use this for twitter and meetup
             centrality_mult = degree*closeness_centrality
             node['centrality_multiplier'] = centrality_mult
+
         
     def set_distributions(self, curing_dist, infecting_dist):
         self.black_dist = curing_dist
