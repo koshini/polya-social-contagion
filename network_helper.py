@@ -93,6 +93,8 @@ class NetWorkHelper():
             curing_dist = self.entropy()
         if self.black_strat == 'centrality_entropy':
             curing_dist = self.centrality_entropy()
+        if self.black_strat == 'centrality_entropy':
+            curing_dist = self.pure_centrality_entropy()
         #print('Black dist:', self.black_dist)
 
         if self.red_strat == 'uniform':
@@ -103,6 +105,8 @@ class NetWorkHelper():
             infecting_dist = self.red_gradient_descent()
         if self.red_strat == 'centrality':
             infecting_dist = self.red_centrality_ratio_strat()
+        if self.red_strat == 'bot_strat':
+            infecting_dist = self.bot_strat()
             
         self.set_distributions(curing_dist, infecting_dist)
         #print('Red dist:', self.red_dist)
@@ -358,7 +362,7 @@ class NetWorkHelper():
 
             for i in range(0, len(adj_infection_array)):
                 if adj_infection_array[i] < 0.4:
-                    adj_infection_array[i] = 0.05
+                    adj_infection_array[i] = 0.02
             #If all nodes less than 60% infected uniformly distribute budget                    
             if(sum(adj_infection_array) == 0):
                 return self.equally_divide(self.black_budget)  
@@ -366,4 +370,32 @@ class NetWorkHelper():
             adj_infection_array = np.multiply(adj_infection_array, centrality_mult_array) / sum(np.multiply(adj_infection_array,centrality_mult_array))
             dist = list(np.around(adj_infection_array * (self.black_budget)))
     
-            return dist        
+            return dist
+    
+    def pure_centrality_entropy(self):
+            infection_array = np.array(list(nx.get_node_attributes(self.G,'network_infection').values()))
+            adj_infection_array = infection_array
+            centrality_mult_array = np.array(list(nx.get_node_attributes(self.G,'centrality_multiplier').values()))
+
+            for i in range(0, len(adj_infection_array)):
+                if adj_infection_array[i] < 0.4:
+                    adj_infection_array[i] = 0
+            #If all nodes less than 60% infected uniformly distribute budget                    
+            if(sum(adj_infection_array) == 0):
+                return self.equally_divide(self.black_budget)  
+                
+            adj_infection_array = np.multiply(adj_infection_array, centrality_mult_array) / sum(np.multiply(adj_infection_array,centrality_mult_array))
+            dist = list(np.around(adj_infection_array * (self.black_budget)))
+    
+            return dist
+    
+    def bot_strat(self):
+            infection_array = np.array(list(nx.get_node_attributes(self.G,'network_infection').values()))
+            adj_infection_array = np.absolute(infection_array - 0.5)
+            adj_infection_array = np.multiply(adj_infection_array, adj_infection_array)
+            centrality_mult_array = np.array(list(nx.get_node_attributes(self.G,'centrality_multiplier').values())) 
+                
+            adj_infection_array = np.multiply(adj_infection_array, centrality_mult_array) / sum(np.multiply(adj_infection_array,centrality_mult_array))
+            dist = list(np.around(adj_infection_array * (self.red_budget)))
+    
+            return dist  
