@@ -10,29 +10,29 @@ from matplotlib.pyplot import pause
 from network_helper import NetWorkHelper
 import csv
 
-NODE_COUNT = 100 
+NODE_COUNT = 100
 ITERATIONS = 500
 RUNS = 5 # run the same strategy 10 times to get a smooth curve
 PARAMETER = 2 # barabasi parameter
 
 def main():
     ##### Scenario 1: black: gradient, red: uniform
-    multiple_simulations()
-    #single_simulation()
+    #multiple_simulations()
+    single_simulation()
 
 def single_simulation():
     ##### Scenario 1: black: gradient, red: uniform
     network_initial_condition = {
-        'red': 5000,
-        'black': 5000,
+        'red': 50000,
+        'black': 50000,
         'dist': 'random',
     }
 
     strat_dict = {
-        'red_budget': 500,
-        'black_budget': 500,
-        'red_strat': 'gradient',
-        'black_strat': 'centrality',
+        'red_budget': 5000,
+        'black_budget': 5000,
+        'red_strat': 'uniform',
+        'black_strat': 'regression',
     }
 
     G = nx.barabasi_albert_graph(NODE_COUNT, PARAMETER)
