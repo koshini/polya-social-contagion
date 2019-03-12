@@ -109,4 +109,5 @@ venv.bak/
 
 # Twitter OAuth
 oauth.json
+.vscode/
 
