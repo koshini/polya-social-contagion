@@ -12,58 +12,39 @@ def main():
 
     # G = nx.barabasi_albert_graph(100, 2)
     iterations = 500
+    runs = 5
     node_count = nx.number_of_nodes(G)
     red_budget = node_count * 10
-    black_budget = node_count * 5
+    black_budget = node_count * 10
 
 
     # uniform vs centrality
     strat_dict = {
         'red_budget': red_budget,
         'black_budget': black_budget,
-        'red_strat': 'uniform',
-        'black_strat': 'centrality_entropy',
+        'red_strat': 'bot_strat',
+        'black_strat': 'follow_bot',
     }
 
     labels.append(strat_dict['red_strat'])
     labels.append(strat_dict['black_strat'])
 
-    initial_balls = node_count * 50
-    initial_condition = {
-        'red': initial_balls,
-        'black': initial_balls,
-        'dist': 'random',
-    }
-
-    network_1 = NetWorkHelper(strat_dict, G)
-    # network_1.create_network(initial_condition)
-    # network_1.set_centrality_mult()
-    infection_rate_1 = []
-    simulate(network_1, infection_rate_1, iterations)
+    infection_rate_1 = simulate(topology, strat_dict, iterations, runs)
 
 ###############################################################################################
-    G = get_graph(topology)
-    # G = nx.barabasi_albert_graph(100, 2)
     strat_dict = {
         'red_budget': red_budget,
         'black_budget': black_budget,
-        'red_strat': 'uniform',
-        'black_strat': 'gradient',
+        'red_strat': 'bot_strat',
+        'black_strat': 'uniform',
     }
 
     labels.append(strat_dict['red_strat'])
     labels.append(strat_dict['black_strat'])
 
-    network_2 = NetWorkHelper(strat_dict, G)
-    # network_uniform.create_network(initial_condition)
-    # network_uniform.set_centrality_mult()
-
-    infection_rate_2 = []
-    simulate(network_2, infection_rate_2, iterations)
+    infection_rate_2 = simulate(topology, strat_dict, iterations, runs)
 
 ###############################################################################################
-    G = get_graph( topology)
-    # G = nx.barabasi_albert_graph(100, 2)
     strat_dict = {
         'red_budget': red_budget,
         'black_budget': black_budget,
@@ -71,19 +52,12 @@ def main():
         'black_strat': 'entropy',
     }
 
-    labels.append(strat_dict['red_strat'])
-    labels.append(strat_dict['black_strat'])
-
-    network_3 = NetWorkHelper(strat_dict, G)
-    # network_uniform.create_network(initial_condition)
-    # network_uniform.set_centrality_mult()
-
-    infection_rate_3 = []
-    simulate(network_3, infection_rate_3, iterations)
+    # labels.append(strat_dict['red_strat'])
+    # labels.append(strat_dict['black_strat'])
+    #
+    # infection_rate_3 = simulate(topology, strat_dict, iterations, runs)
 
 ###############################################################################################
-    G = get_graph(topology)
-    # G = nx.barabasi_albert_graph(100, 2)
     strat_dict = {
         'red_budget': red_budget,
         'black_budget': black_budget,
@@ -91,33 +65,55 @@ def main():
         'black_strat': 'centrality',
     }
 
-    labels.append(strat_dict['red_strat'])
-    labels.append(strat_dict['black_strat'])
+    # labels.append(strat_dict['red_strat'])
+    # labels.append(strat_dict['black_strat'])
+    #
+    # infection_rate_4 = simulate(topology, strat_dict, iterations, runs)
 
-    network_4 = NetWorkHelper(strat_dict, G)
-    # network_uniform.create_network(initial_condition)
-    # network_uniform.set_centrality_mult()
 
-    infection_rate_4 = []
-    simulate(network_4, infection_rate_4, iterations)
 
     plt.plot(list(range(iterations)), infection_rate_1, label='red: ' + labels[0] + ', black: ' + labels[1])
     plt.plot(list(range(iterations)), infection_rate_2, label='red: ' + labels[2] + ', black: ' + labels[3])
-    plt.plot(list(range(iterations)), infection_rate_3, label='red: ' + labels[4] + ', black: ' + labels[5])
-    plt.plot(list(range(iterations)), infection_rate_4, label='red: ' + labels[6] + ', black: ' + labels[7])
+    # plt.plot(list(range(iterations)), infection_rate_3, label='red: ' + labels[4] + ', black: ' + labels[5])
+    # plt.plot(list(range(iterations)), infection_rate_4, label='red: ' + labels[6] + ', black: ' + labels[7])
     plt.legend(loc='upper left')
     plt.axis([0,iterations, 0, 0.9])
-    title = topology + ' network (reduced curing budget)'
+    title = topology + ' network'
     plt.title(title)
-    filename = title + '(reduced curing budget) -' + str(labels) + '.png'
+    filename = title + '-' + str(labels) + '.png'
     plt.savefig(filename, bbox_inches='tight')
     # plt.show()
     print()
 
-def simulate(network, infection_array, iterations):
+
+def simulate(topology, strat_dict, iterations, runs):
+    arrays_of_infection_rate = []
+    for i in range(runs):
+        print('simulate run: ' + str(i))
+        infection_array = simulate_network_infection(topology, strat_dict, iterations)
+        arrays_of_infection_rate.append(infection_array)
+
+    average_infection_rate_overtime = []
+    for t in range(iterations):
+        sum = 0
+        for i in range(len(arrays_of_infection_rate)):
+            sum += arrays_of_infection_rate[i][t]
+        average = sum / len(arrays_of_infection_rate)
+        average_infection_rate_overtime.append(average)
+
+    return average_infection_rate_overtime
+
+
+def simulate_network_infection(topology, strat_dict, iterations):
+    G = get_graph(topology)
+    network = NetWorkHelper(strat_dict, G)
+    G = network.G
+    infection_array = []
     for i in range(0, iterations):
         print(i)
         run_time_step(network, infection_array)
+    return infection_array
+
 
 def run_time_step(network, infection_array):
     current_conditions = {}
@@ -135,6 +131,7 @@ def run_time_step(network, infection_array):
     network.record_entropy()
     average_infection = network_infection_sum / network.node_count
     infection_array.append(average_infection)
+
 
 def add_balls_to_node(network, node_index):
     G = network.G
