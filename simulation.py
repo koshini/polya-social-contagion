@@ -12,7 +12,7 @@ def main():
 
     # G = nx.barabasi_albert_graph(100, 2)
     iterations = 500
-    runs = 5
+    runs = 1
     node_count = nx.number_of_nodes(G)
     red_budget = node_count * 10
     black_budget = node_count * 10

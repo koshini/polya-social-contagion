@@ -150,16 +150,16 @@ class NetWorkHelper():
             super_urn['red'] += self.G.node[neighbor_node]['urns']['red']
             super_urn['black'] += self.G.node[neighbor_node]['urns']['black']
     
-        # network_infection(Si,n) = proportion of the red balls in the node's super urn
-        network_infection = super_urn['red'] / (super_urn['red'] + super_urn['black'])
-        super_urn['network_infection'] = network_infection
-        node[1]['network_infection'] = network_infection
+        # network_exposure(Si,n) = proportion of the red balls in the node's super urn
+        network_exposure = super_urn['red'] / (super_urn['red'] + super_urn['black'])
+        super_urn['network_exposure'] = network_exposure
+        node[1]['network_exposure'] = network_exposure
         node[1]['super_urn'] = super_urn
         return super_urn
     
     def record_entropy(self):
         for index, node in self.G.node.items():
-            p = 1 - node['network_infection']
+            p = 1 - node['network_exposure']
             #node['entropy'].append(-p*math.log(p))
             node['entropy'].append(-p*math.log(p)-(1-p)*math.log(1-p))
         
@@ -170,10 +170,10 @@ class NetWorkHelper():
         exp_red = {}
         for node in self.G.node.items():
             exp_red_temp = 0 
-            exp_red_temp += node[1]['super_urn']['network_infection']*infecting_strat[node[0]]
+            exp_red_temp += node[1]['super_urn']['network_exposure']*infecting_strat[node[0]]
             neighbors = nx.all_neighbors(self.G, node[0])
             for nd in neighbors:
-                exp_red_temp += self.G.node[nd]['super_urn']['network_infection']*infecting_strat[nd]
+                exp_red_temp += self.G.node[nd]['super_urn']['network_exposure']*infecting_strat[nd]
             exp_red[node[0]] = exp_red_temp
         return exp_red
             
@@ -184,16 +184,16 @@ class NetWorkHelper():
         exp_black = {}
         for node in self.G.node.items():
             exp_black_temp = 0 
-            exp_black_temp += (1 - node[1]['super_urn']['network_infection'])*curing_strat[node[0]]
+            exp_black_temp += (1 - node[1]['super_urn']['network_exposure'])*curing_strat[node[0]]
             neighbors = nx.all_neighbors(self.G, node[0])
             for nd in neighbors:
-                exp_black_temp += (1 - self.G.node[nd]['super_urn']['network_infection'])*curing_strat[nd]
+                exp_black_temp += (1 - self.G.node[nd]['super_urn']['network_exposure'])*curing_strat[nd]
             exp_black[node[0]] = exp_black_temp
         return exp_black
     
 
     def calc_node_partial_exposure_black(self, node, exp_red, exp_black):
-        node_exp = node[1]['super_urn']['network_infection']
+        node_exp = node[1]['super_urn']['network_exposure']
         neighbors = nx.all_neighbors(self.G, node[0])
         all_nodes = []
         all_nodes.append(node[0])
@@ -207,7 +207,7 @@ class NetWorkHelper():
         return partial_exp_sum
         
     def calc_node_partial_exposure_red(self, node, exp_red, exp_black):
-        node_exp = node[1]['super_urn']['network_infection']
+        node_exp = node[1]['super_urn']['network_exposure']
         neighbors = nx.all_neighbors(self.G, node[0])
         all_nodes = []
         all_nodes.append(node[0])
@@ -281,7 +281,7 @@ class NetWorkHelper():
         for index, node in self.G.node.items():
             degree = self.G.degree(index)
             closeness_centrality = closeness_centrality_dict[index]
-            infection_rate = node['super_urn']['network_infection']
+            infection_rate = node['super_urn']['network_exposure']
             ##### parameters: degree, closeness, infection
             centrality_infection = degree*closeness_centrality*infection_rate
             node['centrality_infection'] = centrality_infection
@@ -291,7 +291,7 @@ class NetWorkHelper():
     #TODO: Fix this: This does not always output a distribution that adds to budget.
     #We should probably also run the entire strat with one call and not give it node by node
     def black_centrality_ratio_strat(self):
-        infection_array = np.array(list(nx.get_node_attributes(self.G,'network_infection').values()))
+        infection_array = np.array(list(nx.get_node_attributes(self.G,'network_exposure').values()))
         centrality_mult_array = np.array(list(nx.get_node_attributes(self.G,'centrality_multiplier').values()))
         curing_dist = np.multiply(infection_array, centrality_mult_array)
         curing_dist = curing_dist / sum(curing_dist)
@@ -299,7 +299,7 @@ class NetWorkHelper():
         return list(curing_dist)
 
     def red_centrality_ratio_strat(self):
-        infection_array = 1 - np.array(list(nx.get_node_attributes(self.G,'network_infection').values()))
+        infection_array = 1 - np.array(list(nx.get_node_attributes(self.G,'network_exposure').values()))
         centrality_mult_array = np.array(list(nx.get_node_attributes(self.G,'centrality_multiplier').values()))
         infecting_dist = np.multiply(infection_array, centrality_mult_array)
         infecting_dist = infecting_dist / sum(infecting_dist)
@@ -329,7 +329,7 @@ class NetWorkHelper():
         infection_array = []
         centrality_array = []
         for index, node in self.G.node.items():
-            infection_array.append(node['super_urn']['network_infection'])
+            infection_array.append(node['super_urn']['network_exposure'])
             centrality_array.append(node['centrality_multiplier'])
         curing_dist = list(self.regression_model.output_dist(infection_array, centrality_array, self.black_budget))
         return curing_dist
@@ -340,7 +340,7 @@ class NetWorkHelper():
         return curing_dist
         
     def entropy(self):
-        infection_array = np.array(list(nx.get_node_attributes(self.G,'network_infection').values()))
+        infection_array = np.array(list(nx.get_node_attributes(self.G,'network_exposure').values()))
         
         for i in range(0, len(infection_array)):
             if infection_array[i] < 0.4:
@@ -355,7 +355,7 @@ class NetWorkHelper():
         return dist  
     
     def centrality_entropy(self):
-            infection_array = np.array(list(nx.get_node_attributes(self.G,'network_infection').values()))
+            infection_array = np.array(list(nx.get_node_attributes(self.G,'network_exposure').values()))
             adj_infection_array = infection_array
             centrality_mult_array = np.array(list(nx.get_node_attributes(self.G,'centrality_multiplier').values()))
 
@@ -372,7 +372,7 @@ class NetWorkHelper():
             return dist
     
     def pure_centrality_entropy(self):
-            infection_array = np.array(list(nx.get_node_attributes(self.G,'network_infection').values()))
+            infection_array = np.array(list(nx.get_node_attributes(self.G,'network_exposure').values()))
             adj_infection_array = infection_array
             centrality_mult_array = np.array(list(nx.get_node_attributes(self.G,'centrality_multiplier').values()))
 
@@ -389,7 +389,7 @@ class NetWorkHelper():
             return dist
     
     def bot_strat(self):
-            infection_array = np.array(list(nx.get_node_attributes(self.G,'network_infection').values()))
+            infection_array = np.array(list(nx.get_node_attributes(self.G,'network_exposure').values()))
             adj_infection_array = np.absolute(infection_array - 0.5)
             adj_infection_array = np.multiply(adj_infection_array, adj_infection_array)
             centrality_mult_array = np.array(list(nx.get_node_attributes(self.G,'centrality_multiplier').values()))
