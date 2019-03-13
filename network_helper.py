@@ -44,10 +44,9 @@ class NetWorkHelper():
             black_dist = self.equally_divide(initial_condition['black'])
 
         # Add distributions to urn
-        i = 0
         for key in G.nodes.keys():
-            urns[key] = {'red': red_dist[i], 'black': black_dist[i]}
-            i += 1
+            urns[key] = {'red': red_dist[key], 'black': black_dist[key]}
+
 
         # Adds unique urn to each node in network
         nx.set_node_attributes(G, name="urns", values=urns)
@@ -93,7 +92,7 @@ class NetWorkHelper():
             curing_dist = self.entropy()
         if self.black_strat == 'centrality_entropy':
             curing_dist = self.centrality_entropy()
-        if self.black_strat == 'centrality_entropy':
+        if self.black_strat == 'pure_centrality_entropy':
             curing_dist = self.pure_centrality_entropy()
         #print('Black dist:', self.black_dist)
 
@@ -393,7 +392,7 @@ class NetWorkHelper():
             infection_array = np.array(list(nx.get_node_attributes(self.G,'network_infection').values()))
             adj_infection_array = np.absolute(infection_array - 0.5)
             adj_infection_array = np.multiply(adj_infection_array, adj_infection_array)
-            centrality_mult_array = np.array(list(nx.get_node_attributes(self.G,'centrality_multiplier').values())) 
+            centrality_mult_array = np.array(list(nx.get_node_attributes(self.G,'centrality_multiplier').values()))
                 
             adj_infection_array = np.multiply(adj_infection_array, centrality_mult_array) / sum(np.multiply(adj_infection_array,centrality_mult_array))
             dist = list(np.around(adj_infection_array * (self.red_budget)))
