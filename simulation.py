@@ -11,7 +11,7 @@ def main():
     G = get_graph(topology)
 
     # G = nx.barabasi_albert_graph(100, 2)
-    iterations = 500
+    iterations = 100
     runs = 1
     node_count = nx.number_of_nodes(G)
     red_budget = node_count * 10
@@ -125,11 +125,11 @@ def run_time_step(network, infection_array):
         draw = draw_from_superurn(network, node)
         current_conditions[node[0]] = draw
         add_balls_to_node(network, node[0])
-        network.construct_super_urn(node)
-        network_infection_sum += node[1]['super_urn']['network_infection']
+        # network.construct_super_urn(node)
+        # network_infection_sum += node[1]['super_urn']['network_infection']
 
-    network.record_entropy()
-    average_infection = network_infection_sum / network.node_count
+    # network.record_entropy()
+    average_infection = sum(current_conditions.items()) / network.node_count
     infection_array.append(average_infection)
 
 
