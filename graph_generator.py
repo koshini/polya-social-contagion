@@ -85,7 +85,6 @@ def get_graph(name):
     f = open(filepath, 'r').read()
     data = json.loads(f)
     G = json_graph.node_link_graph(data)
-    print(nx.info(G))
     return G
 
 

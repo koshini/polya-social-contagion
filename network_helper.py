@@ -74,7 +74,7 @@ class NetWorkHelper():
             curing_dist = self.constrained_sample_sum_pos(self.black_budget)            
         if self.black_strat == 'gradient':
             curing_dist = self.black_gradient_descent()
-        if self.black_strat == 'centrality':
+        if self.black_strat == 'centrality_ratio':
             curing_dist = self.black_centrality_ratio_strat()
         if self.black_strat == 'regression':
             curing_dist = self.run_regression()
@@ -90,6 +90,8 @@ class NetWorkHelper():
             curing_dist = self.pure_centrality()
         if self.black_strat == 'entropy':
             curing_dist = self.entropy()
+        if self.black_strat == 'entropy2':
+            curing_dist = self.entropy2()
         if self.black_strat == 'bot':
             curing_dist = self.bot_strat_black()
 
@@ -99,7 +101,7 @@ class NetWorkHelper():
             infecting_dist = self.constrained_sample_sum_pos(self.red_budget)
         if self.red_strat == 'gradient':
             infecting_dist = self.red_gradient_descent()
-        if self.red_strat == 'centrality':
+        if self.red_strat == 'centrality_ratio':
             infecting_dist = self.red_centrality_ratio_strat()
         if self.red_strat == 'bot_strat':
             infecting_dist = self.bot_strat()
@@ -168,6 +170,9 @@ class NetWorkHelper():
             p = 1 - node['network_infection']
             #node['entropy'].append(-p*math.log(p))
             node['entropy'].append(-p*math.log(p)-(1-p)*math.log(1-p))
+
+    def record_wasted_budget(self, node, waste):
+        node['wasted_budget'] = waste
         
     def find_superurn_exp_red(self, infecting_strat = None):
         if infecting_strat == None:
@@ -434,13 +439,12 @@ class NetWorkHelper():
 
 
     # Given a list of target node indeces, further target ones with high exposure
-    def entropy(self):
+    def entropy2(self):
         refined_target = []
         for index, node in self.G.node.items():
             if index in self.targets:
                 if node['super_urn']['network_infection'] > 0.6:
                     refined_target.append(index)
-        print(len(refined_target))
         if len(refined_target) == 0:
             dist = self.black_centrality_ratio_strat()
         else:
@@ -451,6 +455,20 @@ class NetWorkHelper():
             for i in range(len(dist)):
                 if i in refined_target:
                     dist[i] = round(large_budget)
+        return dist
+
+    def entropy(self):
+        infection_array = np.array(list(nx.get_node_attributes(self.G, 'network_infection').values()))
+        adj_infection_array = np.array(infection_array - 0.5)
+        for i, x in enumerate(adj_infection_array):
+            adj_infection_array[i] = x * x if (x>0) else 0
+
+        if (sum(adj_infection_array) == 0):
+            return self.pure_centrality(self)
+
+        adj_infection_array = adj_infection_array / sum (adj_infection_array)
+        dist = list(np.around(adj_infection_array * (self.black_budget)))
+
         return dist
 
 
