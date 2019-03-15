@@ -1,0 +1,46 @@
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'uniform', 'black_strat': 'centrality_entropy'}
+3371.6319632530212
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'uniform', 'black_strat': 'pure_centrality_entropy'}
+3362.177976131439
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'uniform', 'black_strat': 'entropy2'}
+3632.047966003418
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'uniform', 'black_strat': 'bot'}
+3337.0624737739563
+
+----------------meetup
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'uniform', 'black_strat': 'pure_centrality'}
+2234.5029997825623
+
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'uniform', 'black_strat': 'centrality_ratio'}
+2231.5408890247345
+
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'uniform', 'black_strat': 'centrality_entropy'}
+2239.528559923172
+
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'uniform', 'black_strat': 'pure_centrality_entropy'}
+2237.0501861572266
+
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'uniform', 'black_strat': 'entropy2'}
+2267.977933883667
+
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'uniform', 'black_strat': 'bot'}
+2229.799026966095
+
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'uniform', 'black_strat': 'entropy3'}
+2402.651064157486
+
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'uniform', 'black_strat': 'entropy'}
+2515.1506917476654
+
+-----------barabsi
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'gradient', 'black_strat': 'uniform'}
+1002.3403940200806
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'uniform', 'black_strat': 'gradient'}
+1052.1940789222717
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'gradient', 'black_strat': 'gradient'}
+1983.012141942978
