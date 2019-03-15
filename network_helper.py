@@ -92,8 +92,14 @@ class NetWorkHelper():
             curing_dist = self.entropy()
         if self.black_strat == 'entropy2':
             curing_dist = self.entropy2()
+        if self.black_strat == 'entropy3':
+            curing_dist = self.entropy3()
+        if self.entropy() == 'entropy_ratio':
+            curing_dist = self.entropy_ratio()
         if self.black_strat == 'bot':
             curing_dist = self.bot_strat_black()
+
+
 
         if self.red_strat == 'uniform':
             infecting_dist = self.equally_divide(self.red_budget)
@@ -103,7 +109,7 @@ class NetWorkHelper():
             infecting_dist = self.red_gradient_descent()
         if self.red_strat == 'centrality_ratio':
             infecting_dist = self.red_centrality_ratio_strat()
-        if self.red_strat == 'bot_strat':
+        if self.red_strat == 'bot':
             infecting_dist = self.bot_strat()
             
         self.set_distributions(curing_dist, infecting_dist)
@@ -319,7 +325,7 @@ class NetWorkHelper():
         return list(infecting_dist)
 
     
-    def set_centrality_mult(self, filepath):
+    def set_centrality_mult(self, filepath=None):
         if not filepath:
             closeness_centrality_dict = nx.closeness_centrality(self.G)
         else: # closeness_centrality_dict is previously computed and stored in a JSON file
@@ -328,8 +334,8 @@ class NetWorkHelper():
 
         for index, node in self.G.node.items():
             degree = self.G.degree(index)
-            # closeness_centrality = closeness_centrality_dict[index]
-            closeness_centrality = closeness_centrality_dict[str(index)] # use this for twitter and meetup
+            closeness_centrality = closeness_centrality_dict[index]
+            # closeness_centrality = closeness_centrality_dict[stpurezr(index)] # use this for twitter and meetup
             centrality_mult = degree*closeness_centrality
             node['centrality_multiplier'] = centrality_mult
 
@@ -431,7 +437,6 @@ class NetWorkHelper():
 
 
     def pure_centrality(self):
-        infection_array = np.array(list(nx.get_node_attributes(self.G,'network_infection').values()))
         centrality_mult_array = np.array(list(nx.get_node_attributes(self.G,'centrality_multiplier').values()))
         curing_dist = centrality_mult_array / sum(centrality_mult_array)
         curing_dist = np.around(curing_dist * self.black_budget)
@@ -464,10 +469,33 @@ class NetWorkHelper():
             adj_infection_array[i] = x * x if (x>0) else 0
 
         if (sum(adj_infection_array) == 0):
-            return self.pure_centrality(self)
+            return self.pure_centrality()
 
         adj_infection_array = adj_infection_array / sum (adj_infection_array)
         dist = list(np.around(adj_infection_array * (self.black_budget)))
+
+        return dist
+
+    # Target the ones that's on our side
+    def entropy3(self):
+        infection_array = np.array(list(nx.get_node_attributes(self.G, 'network_infection').values()))
+        adj_infection_array = np.array((1-infection_array) - 0.5)
+        for i, x in enumerate(adj_infection_array):
+            adj_infection_array[i] = x * x if (x>0) else 0
+
+        if (sum(adj_infection_array) == 0):
+            return self.pure_centrality()
+
+        adj_infection_array = adj_infection_array / sum (adj_infection_array)
+        dist = list(np.around(adj_infection_array * (self.black_budget)))
+
+        return dist
+
+    def entropy_ratio(self):
+        infection_array = np.array(list(nx.get_node_attributes(self.G, 'network_infection').values()))
+
+        infection_array = infection_array / sum (infection_array)
+        dist = list(np.around(infection_array * (self.black_budget)))
 
         return dist
 

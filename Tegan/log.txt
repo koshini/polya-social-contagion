@@ -1,0 +1,12 @@
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'uniform', 'black_strat': 'entropy3'}0.613778829574585{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'uniform', 'black_strat': 'gradient'}25.691235065460205{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'gradient'}33.1851110458374{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'uniform', 'black_strat': 'gradient'}49.4501953125{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'bot', 'black_strat': 'gradient'}58.92381286621094{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'uniform', 'black_strat': 'gradient'}
+19.75161600112915
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'gradient'}
+23.999818086624146
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'uniform', 'black_strat': 'gradient'}
+19.92254090309143
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'gradient'}
+23.72352886199951
+

@@ -33,8 +33,6 @@ def main():
         'parameter': 2,
         'red': initial_balls * 2,
         'black': initial_balls,
-        'dist': 'random',
-        'type': '',
     }
 
     strat_dict = {
@@ -79,12 +77,19 @@ def main():
 
     print()
 
-def get_graph(name):
-    # name is one of the following: 'facebook', 'twitter', 'meetup'
+def get_graph(name, initial_condition=None, strat=None):
+    # name is one of the following: 'facebook', 'twitter', 'meetup' or 'barabasi'
+    if name == 'barabasi':
+        G = nx.barabasi_albert_graph(initial_condition['node_count'], initial_condition['parameter'])
+        network = NetWorkHelper(strat, G)
+        G = network.create_network(initial_condition)
+        network.set_centrality_mult()
+        return G
     filepath = 'data/' + name + '-graph.json'
     f = open(filepath, 'r').read()
     data = json.loads(f)
     G = json_graph.node_link_graph(data)
+    G = nx.convert_node_labels_to_integers(G)
     return G
 
 
@@ -105,6 +110,7 @@ def create_graph_from_matrix(filename):
     input_data = pd.read_csv(filename, header=None)
     G = nx.Graph(input_data.values)
     # print(nx.info(G))
+    G = nx.convert_node_labels_to_integers(G)
     return G
 
 

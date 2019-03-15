@@ -1,0 +1,18 @@
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'uniform', 'black_strat': 'gradient'}
+19.504110097885132
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'gradient'}
+23.234400987625122
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'uniform', 'black_strat': 'gradient'}
+12.499050855636597
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'gradient'}
+14.936180114746094
+
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'uniform', 'black_strat': 'gradient'}
+23.962646007537842
+
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'bot', 'black_strat': 'gradient'}
+28.812050104141235
+

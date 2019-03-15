@@ -7,123 +7,12 @@ import matplotlib.pyplot as plt
 import csv
 
 
-def main():
-    labels = []
-    topology = 'facebook'
-    G = get_graph(topology)
-    targets = set_top_central_nodes(G)
-
-
-    # G = nx.barabasi_albert_graph(100, 2)
-    iterations = 30
-    runs = 1
-    node_count = nx.number_of_nodes(G)
-    red_budget = node_count * 10
-    black_budget = node_count * 10
-
-
-    # uniform vs centrality
-    strat_dict = {
-        'red_budget': red_budget,
-        'black_budget': black_budget,
-        'red_strat': 'uniform',
-        'black_strat': 'entropy',
-    }
-
-    labels.append(strat_dict['red_strat'])
-    labels.append(strat_dict['black_strat'])
-
-    infection_rate_1 = simulate(topology, strat_dict, iterations, runs, targets)
-
-###############################################################################################
-    strat_dict = {
-        'red_budget': red_budget,
-        'black_budget': black_budget,
-        'red_strat': 'uniform',
-        'black_strat': 'pure_centrality',
-    }
-
-    labels.append(strat_dict['red_strat'])
-    labels.append(strat_dict['black_strat'])
-
-    infection_rate_2 = simulate(topology, strat_dict, iterations, runs, targets)
-
-###############################################################################################
-    strat_dict = {
-        'red_budget': red_budget,
-        'black_budget': black_budget,
-        'red_strat': 'uniform',
-        'black_strat': 'centrality_ratio',
-    }
-
-    labels.append(strat_dict['red_strat'])
-    labels.append(strat_dict['black_strat'])
-
-    infection_rate_3 = simulate(topology, strat_dict, iterations, runs, targets)
-
-###############################################################################################
-    strat_dict = {
-        'red_budget': red_budget,
-        'black_budget': black_budget,
-        'red_strat': 'uniform',
-        'black_strat': 'centrality_entropy',
-    }
-
-    # labels.append(strat_dict['red_strat'])
-    # labels.append(strat_dict['black_strat'])
-    #
-    # infection_rate_4 = simulate(topology, strat_dict, iterations, runs, targets)
-
-###############################################################################################
-    strat_dict = {
-        'red_budget': red_budget,
-        'black_budget': black_budget,
-        'red_strat': 'uniform',
-        'black_strat': 'bot',
-    }
-
-    # labels.append(strat_dict['red_strat'])
-    # labels.append(strat_dict['black_strat'])
-    #
-    # infection_rate_5 = simulate(topology, strat_dict, iterations, runs, targets)
-
-###############################################################################################
-    strat_dict = {
-        'red_budget': red_budget,
-        'black_budget': black_budget,
-        'red_strat': 'uniform',
-        'black_strat': 'gradient',
-    }
-
-    # labels.append(strat_dict['red_strat'])
-    # labels.append(strat_dict['black_strat'])
-    #
-    # infection_rate_6 = simulate(topology, strat_dict, iterations, runs, targets)
-
-
-    # plt.plot(list(range(iterations)), infection_rate_1, label='red: ' + labels[0] + ', black: ' + labels[1])
-    # plt.plot(list(range(iterations)), infection_rate_2, label='red: ' + labels[2] + ', black: ' + labels[3])
-    # plt.plot(list(range(iterations)), infection_rate_3, label='red: ' + labels[4] + ', black: ' + labels[5])
-    # plt.plot(list(range(iterations)), infection_rate_4, label='red: ' + labels[6] + ', black: ' + labels[7])
-    # plt.plot(list(range(iterations)), infection_rate_5, label='red: ' + labels[8] + ', black: ' + labels[9])
-    # plt.plot(list(range(iterations)), infection_rate_6, label='red: ' + labels[10] + ', black: ' + labels[11])
-    # plt.legend(loc='best', prop={'size': 5})
-    # plt.axis([0,iterations, 0, 0.9])
-    # title = topology + ' network'
-    # plt.title(title)
-    # filename = title + ' avg emprical infection -' + str(labels) + '.png'
-    # plt.savefig(filename, bbox_inches='tight')
-    # plt.show()
-    print()
-
-
-def simulate(topology, strat_dict, iterations, runs, targets):
-    arrays_of_infection_rate = []
-    arrays_of_waste_arrays = []
-    infection_csv = 'results/empirical-infection' + topology + strat_dict['red_strat'] + strat_dict['black_strat'] + 'infection.csv'
-    waste_csv = 'results/' + topology + strat_dict['red_strat'] + strat_dict['black_strat'] + 'waste.csv'
+def simulate(folder, topology, strat_dict, iterations, runs, targets=None, initial_condition=None):
+    infection_csv = folder + 'empirical-infection' + topology + strat_dict['red_strat'] + strat_dict['black_strat'] + 'infection.csv'
+    waste_csv = folder + topology + strat_dict['red_strat'] + strat_dict['black_strat'] + 'waste.csv'
     for i in range(runs):
-        infection_array, waste_array = simulate_network_infection(topology, strat_dict, iterations, targets)
+        # print(i)
+        infection_array, waste_array = simulate_network_infection(topology, strat_dict, iterations, targets, initial_condition)
         with open(infection_csv, 'a') as f:
             writer = csv.writer(f)
             writer.writerow(infection_array)
@@ -132,22 +21,9 @@ def simulate(topology, strat_dict, iterations, runs, targets):
             writer = csv.writer(f)
             writer.writerow(waste_array)
 
-        arrays_of_infection_rate.append(infection_array)
-        arrays_of_waste_arrays.append(waste_array)
-    #
-    # average_infection_rate_overtime = []
-    # for t in range(iterations):
-    #     sum = 0
-    #     for i in range(len(arrays_of_infection_rate)):
-    #         sum += arrays_of_infection_rate[i][t]
-    #     average = sum / len(arrays_of_infection_rate)
-    #     average_infection_rate_overtime.append(average)
-    #
-    # return average_infection_rate_overtime
 
-
-def simulate_network_infection(topology, strat_dict, iterations, targets):
-    G = get_graph(topology)
+def simulate_network_infection(topology, strat_dict, iterations, targets=None, initial_condition=None):
+    G = get_graph(topology, initial_condition=initial_condition, strat=strat_dict)
     network = NetWorkHelper(strat_dict, G, targets)
     infection_array = []
     waste_array = []
