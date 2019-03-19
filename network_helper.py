@@ -334,8 +334,8 @@ class NetWorkHelper():
 
         for index, node in self.G.node.items():
             degree = self.G.degree(index)
-            closeness_centrality = closeness_centrality_dict[index]
-            # closeness_centrality = closeness_centrality_dict[stpurezr(index)] # use this for twitter and meetup
+            # closeness_centrality = closeness_centrality_dict[index]
+            closeness_centrality = closeness_centrality_dict[str(index)] # use this for twitter and meetup
             centrality_mult = degree*closeness_centrality
             node['centrality_multiplier'] = centrality_mult
 

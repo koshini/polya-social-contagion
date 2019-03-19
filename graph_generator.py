@@ -9,15 +9,15 @@ from network_helper import NetWorkHelper
 
 
 def main():
-    G = create_graph_from_matrix('data/fb-adjacency-matrix.csv')
+    # G = create_graph_from_matrix('data/fb-adjacency-matrix.csv')
     # G = create_graph_from_edgelist('data/twitter.edgelist')
-    # G = create_graph_from_edgelist_csv('data/meetup-group-edges.csv')
+    G = create_graph_from_edgelist_csv('data/meetup-group-edges.csv')
 
     ##### Get closeess centrality and write to a JSON file
     closeness_centrality_dict = nx.closeness_centrality(G)
-    f = open('data/facebook-closeness_centrality.json', 'w')
+    # f = open('data/facebook-closeness_centrality.json', 'w')
     # f = open('data/twitter-closeness_centrality.json', 'w')
-    # f = open('data/meetup-closeness_centrality.json', 'w')
+    f = open('data/meetup-closeness_centrality.json', 'w')
     f.seek(0)
     nodes_json = json.dumps(closeness_centrality_dict)
     f.write(nodes_json)
@@ -31,8 +31,9 @@ def main():
     initial_condition = {
         'node_count': node_count,
         'parameter': 2,
-        'red': initial_balls * 2,
+        'red': initial_balls * 4,
         'black': initial_balls,
+        'dist': 'random'
     }
 
     strat_dict = {
@@ -45,17 +46,17 @@ def main():
     network = NetWorkHelper(strat_dict, G)
     network.G = nx.convert_node_labels_to_integers(G)
     G = network.create_network(initial_condition)
-    network.set_centrality_mult('data/facebook-closeness_centrality.json')
+    # network.set_centrality_mult('data/facebook-closeness_centrality.json')
     # network.set_centrality_mult('data/twitter-closeness_centrality.json')
-    # network.set_centrality_mult('data/meetup-closeness_centrality.json')
+    network.set_centrality_mult('data/meetup-closeness_centrality.json')
     data = json_graph.node_link_data(G)
 
     print(nx.info(network.G))
 
     ##### write to a JSON file
-    f = open('data/facebook-graph.json', 'w')
-    # f = open('data/twitter-graph.json', 'w')
-    # f = open('data/meetup-graph.json', 'w')
+    # f = open('data/90%facebook-graph.json', 'w')
+    # f = open('data/90%twitter-graph.json', 'w')
+    f = open('data/90%meetup-graph.json', 'w')
 
     f.seek(0)
     nodes_json = json.dumps(data)
@@ -67,12 +68,12 @@ def main():
     ##### Plot the graph
     # pylab.show()
     # pylab.ion()
-    plt.figure(1)
-    draw_graph(G)
-    plt.axis('off')
+    # plt.figure(1)
+    # draw_graph(G)
+    # plt.axis('off')
     # plt.suptitle('Facebook Post Network', fontsize=20)
     # plt.title('Number of nodes: 1363, Number of edges: 2425, Average degree:  3.5583', fontsize=12)
-    plt.show()
+    # plt.show()
     # pylab.ioff()
 
     print()
@@ -90,6 +91,7 @@ def get_graph(name, initial_condition=None, strat=None):
     data = json.loads(f)
     G = json_graph.node_link_graph(data)
     G = nx.convert_node_labels_to_integers(G)
+    # print(nx.info(G))
     return G
 
 
