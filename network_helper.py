@@ -133,7 +133,7 @@ class NetWorkHelper():
 
     def more_random_initial_dist(self, total):
         dist = self.constrained_sample_sum_pos(total)
-        # randomly pick 20% of total nodes and add 50 balls
+        # randomly pick 20% of total nodes and add 50% balls
         choices = random.choices(dist, k = int(self.node_count / 5))
         for i in range(len(dist)):
             if i in choices:
@@ -364,7 +364,7 @@ class NetWorkHelper():
         for i in range(0, len(infection_array)):
             if infection_array[i] < 0.5:
                 infection_array[i] = 0
-        #If all nodes less than 50% infected uniformly distribute budget
+        #If all nodes less than 50%% infected uniformly distribute budget
         if(sum(infection_array) == 0):
             return self.equally_divide(self.black_budget)
         
