@@ -5,9 +5,7 @@ import time
 
 
 def main():
-    folder = 'results/'
-    print('----------------barabasi')
-    topology = 'barabasi'
+    topology = 'facebook'
     G = get_graph()
     iterations = 600
     runs = 100

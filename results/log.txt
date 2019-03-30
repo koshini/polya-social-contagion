@@ -79,3 +79,6 @@
 {'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'uniform'}
 1241.663144826889
 
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'follow_bot'}
+1206.1193749904633
+

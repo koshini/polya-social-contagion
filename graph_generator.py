@@ -9,9 +9,9 @@ from network_helper import NetWorkHelper
 
 
 def main():
-    # G = create_graph_from_matrix('data/fb-adjacency-matrix.csv')
+    G = create_graph_from_matrix('data/fb-adjacency-matrix.csv')
     # G = create_graph_from_edgelist('data/twitter.edgelist')
-    G = create_graph_from_edgelist_csv('data/meetup-group-edges.csv')
+    # G = create_graph_from_edgelist_csv('data/meetup-group-edges.csv')
 
     ##### Get closeess centrality and write to a JSON file
     # closeness_centrality_dict = nx.closeness_centrality(G)
@@ -25,13 +25,13 @@ def main():
     # f.close()
 
     node_count = nx.number_of_nodes(G)
-    initial_balls = node_count * 50
+    initial_balls = node_count * 100
     budget = node_count * 10
 
     initial_condition = {
         'node_count': node_count,
         'parameter': 2,
-        'red': initial_balls,
+        'red': initial_balls * 2,
         'black': initial_balls,
         'dist': 'random'
     }
@@ -46,17 +46,17 @@ def main():
     network = NetWorkHelper(strat_dict, G)
     network.G = nx.convert_node_labels_to_integers(G)
     G = network.create_network(initial_condition)
-    # network.set_centrality_mult('data/facebook-closeness_centrality.json')
+    network.set_centrality_mult('data/facebook-closeness_centrality.json')
     # network.set_centrality_mult('data/twitter-closeness_centrality.json')
-    network.set_centrality_mult('data/meetup-closeness_centrality.json')
+    # network.set_centrality_mult('data/meetup-closeness_centrality.json')
     data = json_graph.node_link_data(G)
 
     print(nx.info(network.G))
 
     ##### write to a JSON file
-    # f = open('data/50%%facebook-graph.json', 'w')
-    # f = open('data/50%%twitter-graph.json', 'w')
-    f = open('data/50%%meetup-graph.json', 'w')
+    f = open('data/facebook-graph.json', 'w')
+    # f = open('data/twitter-graph.json', 'w')
+    # f = open('data/meetup-graph.json', 'w')
 
     f.seek(0)
     nodes_json = json.dumps(data)
@@ -86,7 +86,7 @@ def get_graph(name, initial_condition=None, strat=None):
         G = network.create_network(initial_condition)
         network.set_centrality_mult()
         return G
-    filepath = 'data/50%' + name + '-graph.json'
+    filepath = 'data/' + name + '-graph.json'
     f = open(filepath, 'r').read()
     data = json.loads(f)
     G = json_graph.node_link_graph(data)

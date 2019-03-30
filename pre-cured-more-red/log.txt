@@ -1,0 +1,132 @@
+{'red_budget': 30050, 'black_budget': 21035, 'red_strat': 'bot', 'black_strat': 'pure_centrality_entropy'}
+1246.4131531715393
+
+{'red_budget': 30050, 'black_budget': 21035, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
+607.882631778717
+
+{'red_budget': 30050, 'black_budget': 21035, 'red_strat': 'bot', 'black_strat': 'uniform'}
+586.9042501449585
+
+{'red_budget': 30050, 'black_budget': 21035, 'red_strat': 'bot', 'black_strat': 'follow_bot'}
+580.6361269950867
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'pure_centrality_entropy'}
+1562.2652311325073
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'centrality_entropy'}
+1784.5393929481506
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
+1712.2924318313599
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'uniform'}
+1482.39643907547
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'follow_bot'}
+1488.4100551605225
+
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'bot', 'black_strat': 'pure_centrality_entropy'}
+990.0613858699799
+
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'bot', 'black_strat': 'centrality_entropy'}
+989.0870277881622
+
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
+976.9864518642426
+
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'bot', 'black_strat': 'uniform'}
+972.1227190494537
+
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'bot', 'black_strat': 'follow_bot'}
+976.115003824234
+
+{'red_budget': 13630, 'black_budget': 9541, 'red_strat': 'bot', 'black_strat': 'pure_centrality_entropy'}
+297.4806959629059
+
+{'red_budget': 13630, 'black_budget': 9541, 'red_strat': 'bot', 'black_strat': 'centrality_entropy'}
+297.86751198768616
+
+{'red_budget': 13630, 'black_budget': 9541, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
+296.6532201766968
+
+{'red_budget': 13630, 'black_budget': 9541, 'red_strat': 'bot', 'black_strat': 'uniform'}
+299.3229751586914
+
+{'red_budget': 13630, 'black_budget': 9541, 'red_strat': 'bot', 'black_strat': 'follow_bot'}
+294.08801102638245
+
+{'red_budget': 4560, 'black_budget': 3192, 'red_strat': 'bot', 'black_strat': 'pure_centrality_entropy'}
+197.93516206741333
+
+{'red_budget': 4560, 'black_budget': 3192, 'red_strat': 'bot', 'black_strat': 'centrality_entropy'}
+197.6678650379181
+
+{'red_budget': 4560, 'black_budget': 3192, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
+198.80064415931702
+
+{'red_budget': 4560, 'black_budget': 3192, 'red_strat': 'bot', 'black_strat': 'uniform'}
+195.61248588562012
+
+{'red_budget': 4560, 'black_budget': 3192, 'red_strat': 'bot', 'black_strat': 'follow_bot'}
+194.20013880729675
+
+{'red_budget': 13630, 'black_budget': 9541, 'red_strat': 'bot', 'black_strat': 'pure_centrality_entropy'}
+294.7479350566864
+
+{'red_budget': 13630, 'black_budget': 9541, 'red_strat': 'bot', 'black_strat': 'centrality_entropy'}
+292.0304079055786
+
+{'red_budget': 13630, 'black_budget': 9541, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
+291.00697112083435
+
+{'red_budget': 13630, 'black_budget': 9541, 'red_strat': 'bot', 'black_strat': 'uniform'}
+289.84060525894165
+
+{'red_budget': 13630, 'black_budget': 9541, 'red_strat': 'bot', 'black_strat': 'follow_bot'}
+290.8918831348419
+
+{'red_budget': 4560, 'black_budget': 3192, 'red_strat': 'bot', 'black_strat': 'pure_centrality_entropy'}
+201.05919575691223
+
+{'red_budget': 4560, 'black_budget': 3192, 'red_strat': 'bot', 'black_strat': 'centrality_entropy'}
+202.25703811645508
+
+{'red_budget': 4560, 'black_budget': 3192, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
+195.1187379360199
+
+{'red_budget': 4560, 'black_budget': 3192, 'red_strat': 'bot', 'black_strat': 'uniform'}
+194.38386392593384
+
+{'red_budget': 4560, 'black_budget': 3192, 'red_strat': 'bot', 'black_strat': 'follow_bot'}
+194.97846293449402
+
+{'red_budget': 13630, 'black_budget': 9541, 'red_strat': 'bot', 'black_strat': 'pure_centrality_entropy'}
+2663.0739278793335
+
+{'red_budget': 13630, 'black_budget': 9541, 'red_strat': 'bot', 'black_strat': 'centrality_entropy'}
+2635.637587785721
+
+{'red_budget': 13630, 'black_budget': 9541, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
+4349.264128923416
+
+{'red_budget': 13630, 'black_budget': 9541, 'red_strat': 'bot', 'black_strat': 'uniform'}
+5971.220342874527
+
+{'red_budget': 13630, 'black_budget': 9541, 'red_strat': 'bot', 'black_strat': 'follow_bot'}
+2669.5181193351746
+
+{'red_budget': 4560, 'black_budget': 3192, 'red_strat': 'bot', 'black_strat': 'pure_centrality_entropy'}
+1841.9444551467896
+
+{'red_budget': 4560, 'black_budget': 3192, 'red_strat': 'bot', 'black_strat': 'centrality_entropy'}
+2614.1592059135437
+
+{'red_budget': 4560, 'black_budget': 3192, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
+1704.1572668552399
+
+{'red_budget': 4560, 'black_budget': 3192, 'red_strat': 'bot', 'black_strat': 'uniform'}
+1689.4013171195984
+
+{'red_budget': 4560, 'black_budget': 3192, 'red_strat': 'bot', 'black_strat': 'follow_bot'}
+1696.3568761348724
+

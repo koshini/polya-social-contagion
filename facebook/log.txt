@@ -1,0 +1,66 @@
+red budget: 13630
+black budget: 13630
+
+red budget: 13630
+black budget: 13630
+
+red budget: 13630
+black budget: 13630
+
+red budget: 13630
+black budget: 13630
+
+red budget: 13630
+black budget: 13630
+
+red budget: 13630
+black budget: 13630
+
+red budget: 13630
+black budget: 13630
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0}
+1729.1669771671295
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.6, 'portion': 0}
+1641.3215110301971
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.02}
+1662.1564600467682
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.6, 'portion': 0.02}
+1530.5599801540375
+
+red budget: 13630
+black budget: 13630
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.3, 'portion': 0.02}
+1438.592230796814
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.5, 'portion': 0.02}
+1369.574372291565
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'adaptive_centrality_threshold', 'threshold': 0.1, 'portion': 0.02}
+1367.1045098304749
+
+red budget: 13630
+black budget: 13630
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.05}
+1530.1041240692139
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.1}
+1509.509225845337
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'adaptive_centrality_threshold', 'threshold': 0.4, 'portion': 0.5}
+1493.571256160736
+
+red budget: 13630
+black budget: 13630
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.5}
+1469.7045052051544
+
+red budget: 13630
+black budget: 13630
+
