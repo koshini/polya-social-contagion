@@ -8,10 +8,13 @@ import pandas as pd
 from network_helper import NetWorkHelper
 
 
-def main():
-    G = create_graph_from_matrix('data/fb-adjacency-matrix.csv')
-    # G = create_graph_from_edgelist('data/twitter.edgelist')
-    # G = create_graph_from_edgelist_csv('data/meetup-group-edges.csv')
+def generate_graph(folder, topology, red_mult, black_mult):
+    if topology == 'facebook':
+        G = create_graph_from_matrix('data/fb-adjacency-matrix.csv')
+    elif topology == 'twitter':
+        G = create_graph_from_edgelist('data/twitter.edgelist')
+    elif topology == 'meetup':
+        G = create_graph_from_edgelist_csv('data/meetup-group-edges.csv')
 
     ##### Get closeess centrality and write to a JSON file
     # closeness_centrality_dict = nx.closeness_centrality(G)
@@ -31,8 +34,8 @@ def main():
     initial_condition = {
         'node_count': node_count,
         'parameter': 2,
-        'red': initial_balls * 2,
-        'black': initial_balls,
+        'red': initial_balls * red_mult,
+        'black': initial_balls * black_mult,
         'dist': 'random'
     }
 
@@ -46,15 +49,17 @@ def main():
     network = NetWorkHelper(strat_dict, G)
     network.G = nx.convert_node_labels_to_integers(G)
     G = network.create_network(initial_condition)
-    network.set_centrality_mult('data/facebook-closeness_centrality.json')
-    # network.set_centrality_mult('data/twitter-closeness_centrality.json')
-    # network.set_centrality_mult('data/meetup-closeness_centrality.json')
+    centrality_json = 'data/' + topology + '-closeness_centrality.json'
+    network.set_centrality_mult(centrality_json)
     data = json_graph.node_link_data(G)
 
     print(nx.info(network.G))
 
     ##### write to a JSON file
-    f = open('data/facebook-graph.json', 'w')
+    filepath = folder + '/' + topology + str(red_mult) +'_' +str(black_mult) + '.json'
+    # filepath = 'data/' + topology + '-graph.json'
+    f = open(filepath, 'w')
+    # f = open('data/facebook-graph.json', 'w')
     # f = open('data/twitter-graph.json', 'w')
     # f = open('data/meetup-graph.json', 'w')
 
@@ -76,17 +81,18 @@ def main():
     # plt.show()
     # pylab.ioff()
 
-    print()
+    return get_graph(folder, topology, red_mult, black_mult, initial_condition=initial_condition, strat=strat_dict)
 
-def get_graph(name, initial_condition=None, strat=None):
+def get_graph(folder, topology, red_mult, black_mult, initial_condition=None, strat=None):
     # name is one of the following: 'facebook', 'twitter', 'meetup' or 'barabasi'
-    if name == 'barabasi':
+    if topology == 'barabasi':
         G = nx.barabasi_albert_graph(initial_condition['node_count'], initial_condition['parameter'])
         network = NetWorkHelper(strat, G)
         G = network.create_network(initial_condition)
         network.set_centrality_mult()
         return G
-    filepath = 'data/' + name + '-graph.json'
+    filepath = folder + '/' + topology + str(red_mult) +'_' +str(black_mult) + '.json'
+    # filepath = 'data/' + topology + '-graph.json'
     f = open(filepath, 'r').read()
     data = json.loads(f)
     G = json_graph.node_link_graph(data)
@@ -147,6 +153,3 @@ def infection_rate_to_color(node):
     infection_rate = node[1]['super_urn']['network_infection']
     return 1-infection_rate
 
-
-if __name__ == '__main__':
-    main()

@@ -7,23 +7,27 @@ import matplotlib.pyplot as plt
 import csv
 
 
-def simulate(folder, topology, strat_dict, iterations, runs, targets=None, initial_condition=None):
-    infection_csv = folder + 'empirical-infection' + topology + strat_dict['red_strat'] + strat_dict['black_strat'] + 'infection.csv'
-    waste_csv = folder + topology + strat_dict['red_strat'] + strat_dict['black_strat'] + 'waste.csv'
+def simulate(folder, topology, red_mult, black_mult, strat_dict, iterations, runs, targets=None, initial_condition=None, prefix=None):
+    infection_csv = folder + '/empirical-infection' + topology + strat_dict['red_strat'] + strat_dict['black_strat'] + 'infection.csv'
+    waste_csv = folder +'/'+ topology + strat_dict['red_strat'] + strat_dict['black_strat'] + 'waste.csv'
+    if prefix:
+        infection_csv = folder + topology + prefix + strat_dict['red_strat'] + strat_dict[
+            'black_strat'] + 'infection.csv'
+        # waste_csv = folder + '/' + prefix + strat_dict['red_strat'] + strat_dict['black_strat'] + 'waste.csv'
     for i in range(runs):
         # print(i)
-        infection_array, waste_array = simulate_network_infection(topology, strat_dict, iterations, targets, initial_condition)
+        infection_array, waste_array = simulate_network_infection(folder, topology, red_mult, black_mult, strat_dict, iterations, initial_condition=initial_condition)
         with open(infection_csv, 'a') as f:
             writer = csv.writer(f)
             writer.writerow(infection_array)
 
-        with open(waste_csv, 'a') as f:
-            writer = csv.writer(f)
-            writer.writerow(waste_array)
+        # with open(waste_csv, 'a') as f:
+        #     writer = csv.writer(f)
+        #     writer.writerow(waste_array)
 
 
-def simulate_network_infection(topology, strat_dict, iterations, targets=None, initial_condition=None):
-    G = get_graph(topology, initial_condition=initial_condition, strat=strat_dict)
+def simulate_network_infection(folder, topology, red_mult, black_mult, strat_dict, iterations, targets=None, initial_condition=None):
+    G = get_graph(folder, topology, red_mult, black_mult, initial_condition=initial_condition, strat=strat_dict)
     network = NetWorkHelper(strat_dict, G, targets)
     infection_array = []
     waste_array = []

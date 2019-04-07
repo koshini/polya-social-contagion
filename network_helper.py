@@ -16,6 +16,7 @@ class NetWorkHelper():
         self.black_dist = self.node_count * [0]
         self.red_strat = strat_dict['red_strat']
         self.black_strat = strat_dict['black_strat']
+        self.strat_dict = strat_dict
         self.G = G
         self.targets = targets
 
@@ -82,10 +83,10 @@ class NetWorkHelper():
             curing_dist = self.follow_bot()
         if self.black_strat == 'threshold':
             curing_dist = self.threshold()
-        if self.black_strat == 'centrality_entropy':
-            curing_dist = self.centrality_entropy()
-        if self.black_strat == 'pure_centrality_entropy':
-            curing_dist = self.pure_centrality_entropy()
+        if self.black_strat == 'centrality_threshold':
+            curing_dist = self.centrality_threshold()
+        if self.black_strat == 'pure_centrality_threshold':
+            curing_dist = self.pure_centrality_threshold()
         if self.black_strat == 'pure_centrality':
             curing_dist = self.pure_centrality()
         if self.black_strat == 'entropy':
@@ -98,7 +99,12 @@ class NetWorkHelper():
             curing_dist = self.entropy_ratio()
         if self.black_strat == 'bot':
             curing_dist = self.bot_strat_black()
-
+        if self.black_strat == 'pure_closeness':
+            curing_dist = self.pure_closeness()
+        if self.black_strat == 'pure_degree':
+            curing_dist = self.pure_degree()
+        if self.black_strat == 'pure_exposure':
+            curing_dist = self.pure_exposure()
 
 
         if self.red_strat == 'uniform':
@@ -338,6 +344,8 @@ class NetWorkHelper():
             closeness_centrality = closeness_centrality_dict[str(index)] # use this for twitter and meetup
             centrality_mult = degree*closeness_centrality
             node['centrality_multiplier'] = centrality_mult
+            node['closeness'] = closeness_centrality
+            node['degree'] = degree
 
         
     def set_distributions(self, curing_dist, infecting_dist):
@@ -373,15 +381,14 @@ class NetWorkHelper():
 
         return dist  
     
-    def centrality_entropy(self):
+    def centrality_threshold(self):
             infection_array = np.array(list(nx.get_node_attributes(self.G,'network_infection').values()))
             adj_infection_array = infection_array
             centrality_mult_array = np.array(list(nx.get_node_attributes(self.G,'centrality_multiplier').values()))
 
             for i in range(0, len(adj_infection_array)):
-                if adj_infection_array[i] < 0.4:
-                    adj_infection_array[i] = 0.02
-            #If all nodes less than 60% infected uniformly distribute budget                    
+                if adj_infection_array[i] < self.strat_dict['threshold']:
+                    adj_infection_array[i] = self.strat_dict['portion']
             if(sum(adj_infection_array) == 0):
                 return self.equally_divide(self.black_budget)  
                 
@@ -390,7 +397,7 @@ class NetWorkHelper():
     
             return dist
     
-    def pure_centrality_entropy(self):
+    def pure_centrality_threshold(self):
             infection_array = np.array(list(nx.get_node_attributes(self.G,'network_infection').values()))
             adj_infection_array = infection_array
             centrality_mult_array = np.array(list(nx.get_node_attributes(self.G,'centrality_multiplier').values()))
@@ -439,6 +446,25 @@ class NetWorkHelper():
     def pure_centrality(self):
         centrality_mult_array = np.array(list(nx.get_node_attributes(self.G,'centrality_multiplier').values()))
         curing_dist = centrality_mult_array / sum(centrality_mult_array)
+        curing_dist = np.around(curing_dist * self.black_budget)
+        return list(curing_dist)
+
+
+    def pure_exposure(self):
+        infection_array = np.array(list(nx.get_node_attributes(self.G, 'network_infection').values()))
+        curing_dist = infection_array / sum(infection_array)
+        curing_dist = np.around(curing_dist * self.black_budget)
+        return list(curing_dist)
+
+    def pure_degree(self):
+        degree_array = np.array(list(nx.get_node_attributes(self.G,'degree').values()))
+        curing_dist = degree_array / sum(degree_array)
+        curing_dist = np.around(curing_dist * self.black_budget)
+        return list(curing_dist)
+
+    def pure_closeness(self):
+        closeness_array = np.array(list(nx.get_node_attributes(self.G,'closeness').values()))
+        curing_dist = closeness_array / sum(closeness_array)
         curing_dist = np.around(curing_dist * self.black_budget)
         return list(curing_dist)
 

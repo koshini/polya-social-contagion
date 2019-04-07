@@ -1,84 +1,195 @@
 {'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
-3245.2179839611053
+3571.58407497406
 
 {'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'centrality_ratio'}
-3273.345771074295
+3521.471368789673
 
 {'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'centrality_entropy'}
-3286.5154321193695
+3511.7326991558075
 
 {'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'follow_bot'}
-3202.5345141887665
-
-{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'uniform', 'black_strat': 'pure_centrality'}
-3253.5495789051056
-
-{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'uniform', 'black_strat': 'centrality_ratio'}
-3399.849025964737
-
-{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'uniform', 'black_strat': 'centrality_entropy'}
-3438.1788153648376
-
-{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'uniform', 'black_strat': 'follow_bot'}
-3194.4385612010956
-
-{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
-2213.093411922455
-
-{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'bot', 'black_strat': 'centrality_ratio'}
-2223.3653378486633
-
-{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'bot', 'black_strat': 'centrality_entropy'}
-2232.112565279007
-
-{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'bot', 'black_strat': 'follow_bot'}
-2200.4259960651398
-
-{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'uniform', 'black_strat': 'pure_centrality'}
-2194.0456507205963
-
-{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'uniform', 'black_strat': 'centrality_ratio'}
-2205.9781770706177
-
-{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'uniform', 'black_strat': 'centrality_entropy'}
-2211.359009027481
-
-{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'uniform', 'black_strat': 'follow_bot'}
-2173.8282618522644
+3465.575514793396
 
 {'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
-563.143304347992
+5.9720728397369385
 
 {'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'centrality_ratio'}
-568.9415366649628
+5.9617390632629395
 
 {'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'centrality_entropy'}
-572.1540448665619
+6.056923866271973
 
 {'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'follow_bot'}
-556.8594768047333
+5.903985023498535
 
 {'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'uniform', 'black_strat': 'pure_centrality'}
-5.648019075393677
+5.92579984664917
 
 {'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'uniform', 'black_strat': 'centrality_ratio'}
-5.6919660568237305
+5.993266820907593
 
 {'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'uniform', 'black_strat': 'centrality_entropy'}
-5.7388951778411865
+5.953756809234619
 
 {'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'uniform', 'black_strat': 'follow_bot'}
-5.596128940582275
+5.717947721481323
 
-{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'uniform', 'black_strat': 'pure_centrality'}
-5.630976676940918
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'uniform', 'black_strat': 'gradient'}
+1009.0216729640961
 
-{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'uniform', 'black_strat': 'centrality_ratio'}
-5.738252878189087
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'gradient', 'black_strat': 'gradient'}
+1986.161476135254
 
-{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'uniform', 'black_strat': 'centrality_entropy'}
-5.7727696895599365
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'pure_centrality_entropy'}
+2923.3957958221436
 
-{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'uniform', 'black_strat': 'follow_bot'}
-5.496388912200928
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'bot', 'black_strat': 'pure_centrality_entropy'}
+1987.6621611118317
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'pure_centrality_entropy'}
+1252.1769831180573
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'centrality_entropy'}
+1206.3221638202667
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
+1243.9227347373962
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'uniform'}
+1258.436995267868
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'follow_bot'}
+1231.1775460243225
+
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'bot', 'black_strat': 'uniform'}
+2167.778671979904
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'uniform'}
+3000.9693870544434
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'pure_centrality_entropy'}
+1217.4853839874268
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'centrality_entropy'}
+1253.666265964508
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
+1212.30273103714
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'uniform'}
+1241.663144826889
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'follow_bot'}
+1206.1193749904633
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.05}
+285.7745270729065
+
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.05}
+193.4078779220581
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.05}
+589.3088908195496
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.05}
+926.6924872398376
+
+{'red_budget': 4560, 'black_budget': 4560, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.05}
+617.905280828476
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.2, 'portion': 0.02}
+562.1748259067535
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.2, 'portion': 0.1}
+569.0209379196167
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.02}
+571.2007689476013
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.1}
+5318.320444822311
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0, 'portion': 0.02}
+1932.9641768932343
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0, 'portion': 0.1}
+622.1075229644775
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.2, 'portion': 0}
+135.02531504631042
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0}
+132.43377113342285
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.5, 'portion': 0}
+131.45562982559204
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.6, 'portion': 0}
+133.14011216163635
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.8, 'portion': 0}
+137.81975889205933
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0}
+138.0724322795868
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.01}
+136.07407569885254
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.02}
+142.81657218933105
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.05}
+139.45038485527039
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.1}
+152.53294897079468
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
+160.464430809021
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'pure_degree'}
+147.01627397537231
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'pure_closeness'}
+139.2954080104828
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'pure_exposure'}
+144.2118592262268
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'uniform', 'black_strat': 'gradient'}
+507.35907316207886
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'gradient', 'black_strat': 'gradient'}
+988.4021260738373
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'gradient', 'black_strat': 'uniform'}
+500.1554310321808
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0, 'portion': 0.01}
+146.80457997322083
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0, 'portion': 0.05}
+144.74051880836487
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0, 'portion': 0.1}
+141.998352766037
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.2, 'portion': 0.01}
+145.5524570941925
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.2, 'portion': 0.05}
+141.30432200431824
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.2, 'portion': 0.1}
+140.35090017318726
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'pure_centrality_threshold'}
+638.6160781383514
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
+642.370591878891
+
+{'red_budget': 30050, 'black_budget': 30050, 'red_strat': 'bot', 'black_strat': 'uniform'}
+659.34001994133
 

@@ -1,0 +1,204 @@
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.2, 'portion': 0}
+13.174845933914185
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0}
+12.93477988243103
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.6, 'portion': 0}
+12.672123908996582
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'pure_degree'}
+13.627264738082886
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'pure_closeness'}
+13.25481390953064
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'pure_exposure'}
+13.935522079467773
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.2, 'portion': 0}
+25.539546012878418
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0}
+24.773404121398926
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.6, 'portion': 0}
+24.662171840667725
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'pure_degree'}
+24.24626088142395
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'pure_closeness'}
+25.480541229248047
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'pure_exposure'}
+25.529446840286255
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.2, 'portion': 0}
+50.4438259601593
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0}
+48.26679587364197
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.6, 'portion': 0}
+47.64185285568237
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'pure_degree'}
+46.94170808792114
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'pure_closeness'}
+46.452008962631226
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'pure_exposure'}
+46.43606400489807
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
+46.94786190986633
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.2, 'portion': 0}
+57.175912857055664
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.2, 'portion': 0}
+54.702935218811035
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0}
+53.14538383483887
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.6, 'portion': 0}
+54.011147022247314
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.2, 'portion': 0}
+52.668967962265015
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0}
+53.59905695915222
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.6, 'portion': 0}
+53.31153988838196
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'pure_degree'}
+50.487699031829834
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'pure_closeness'}
+49.92569279670715
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'pure_exposure'}
+49.62538528442383
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
+49.83863306045532
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.2, 'portion': 0.02}
+53.45512509346008
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.2, 'portion': 0.1}
+50.864463090896606
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.2, 'portion': 0.5}
+49.87006711959839
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.02}
+50.28367900848389
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.1}
+50.21550416946411
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.5}
+49.866519927978516
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.01}
+51.237200021743774
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.02}
+51.002540826797485
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.05}
+50.26279377937317
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.1}
+49.93532705307007
+
+{'red_budget': 100, 'black_budget': 100, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.5}
+50.255428075790405
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0}
+253.73506617546082
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.01}
+258.5066056251526
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.02}
+255.68191123008728
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.05}
+257.45046401023865
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.1}
+270.0267827510834
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.5}
+280.1911299228668
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0}
+439.3963339328766
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.01}
+430.580069065094
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.02}
+414.7454562187195
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.05}
+423.21880197525024
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.1}
+426.99147391319275
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.5}
+406.36173486709595
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'pure_centrality'}
+265.9206190109253
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'pure_degree'}
+267.9983260631561
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'pure_closeness'}
+260.09335017204285
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'pure_exposure'}
+273.04102516174316
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.2, 'portion': 0}
+283.5623800754547
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0}
+282.8019001483917
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.5, 'portion': 0}
+271.91539192199707
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.6, 'portion': 0}
+264.04365491867065
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.8, 'portion': 0}
+261.7474298477173
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0}
+266.5399661064148
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.01}
+264.1690101623535
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.02}
+260.3766231536865
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.05}
+259.90445017814636
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.1}
+259.11741304397583
+
+{'red_budget': 1000, 'black_budget': 1000, 'red_strat': 'bot', 'black_strat': 'centrality_threshold', 'threshold': 0.4, 'portion': 0.5}
+267.96812891960144
+

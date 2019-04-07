@@ -5,10 +5,10 @@ from graph_generator import get_graph
 
 
 def main():
-    # topology = 'meetup'
+    # topology = 'facebook'
     # G = get_graph(topology)
     node_count = 1500
-    param=10
+    param = 2
     G = nx.barabasi_albert_graph(node_count, param)
 
     strat_dict = {
@@ -36,7 +36,9 @@ def main():
 
     # print(degree_list)
     plt.hist(degree_list, bins=100)
-    plt.axis([0, 150, 0, 500])
+    plt.xlabel('Number of edges')
+    plt.ylabel('Number of nodes')
+    # plt.axis([0, 150, 0, 500])
     plt.show()
 
 if __name__ == "__main__":

@@ -1,0 +1,9 @@
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'pure_closeness'}
+1559.13135099411
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'pure_degree'}
+1517.9915311336517
+
+{'red_budget': 13630, 'black_budget': 13630, 'red_strat': 'bot', 'black_strat': 'pure_exposure'}
+1506.5079040527344
+
